@@ -2,7 +2,7 @@ import React, {
   useCallback,
   useEffect,
   useState,
-  useRef,
+  // useRef,
   useMemo,
 } from "react";
 import thumbnail from "../assets/thumbnail.png";
@@ -20,9 +20,32 @@ export default function Home() {
   const [cart, setCart] = useState(
     JSON.parse(localStorage.getItem("cart")) || []
   );
-  const headlineRef = useRef(null);
-  const thumbnailContainerRef = useRef(null);
-  const thumbnailImgRef = useRef(null);
+
+  // const headlineRef = useRef(null);
+  // const thumbnailContainerRef = useRef(null);
+  // const thumbnailImgRef = useRef(null);
+  // useEffect(() => {
+  //   const handleResize = () => {
+  //     if (headlineRef.current && thumbnailContainerRef.current) {
+  //       const newHeight = headlineRef.current.offsetHeight + 30;
+  //       const contanerWidthLongerThanImgWidth =
+  //         window.innerWidth > newHeight / thumbnailRatio;
+  //       thumbnailContainerRef.current.style.height =
+  //         contanerWidthLongerThanImgWidth ? "auto" : `calc(${newHeight}px)`;
+  //       thumbnailImgRef.current.classList = contanerWidthLongerThanImgWidth
+  //         ? "w-100"
+  //         : "h-100";
+  //     }
+  //   };
+
+  //   handleResize();
+
+  //   window.addEventListener("resize", handleResize);
+
+  //   return () => {
+  //     window.removeEventListener("resize", handleResize);
+  //   };
+  // }, [headlineRef, thumbnailContainerRef]);
 
   useEffect(() => {
     (async () => {
@@ -37,36 +60,13 @@ export default function Home() {
     })();
   }, []);
 
-  useEffect(() => {
-    const handleResize = () => {
-      if (headlineRef.current && thumbnailContainerRef.current) {
-        const newHeight = headlineRef.current.offsetHeight + 30;
-        const contanerWidthLongerThanImgWidth =
-          window.innerWidth > newHeight / thumbnailRatio;
-        thumbnailContainerRef.current.style.height =
-          contanerWidthLongerThanImgWidth ? "auto" : `calc(${newHeight}px)`;
-        thumbnailImgRef.current.classList = contanerWidthLongerThanImgWidth
-          ? "w-100"
-          : "h-100";
-      }
-    };
-
-    handleResize();
-
-    window.addEventListener("resize", handleResize);
-
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, [headlineRef, thumbnailContainerRef]);
-
   const addItem = useCallback((id) => {}, []);
 
   return (
     <MainLayout>
       <Row>
         <Col>
-          <div
+          {/* <div
             className="pt-5 ps-5 position-absolute headline"
             ref={headlineRef}
           >
@@ -91,7 +91,8 @@ export default function Home() {
             style={{ minHeight: "200px" }}
           >
             <img src={thumbnail} alt="thumbnail" ref={thumbnailImgRef} />
-          </div>
+          </div> */}
+          <img src={thumbnail} className="w-100" />
         </Col>
       </Row>
       <Row className="px-5">
