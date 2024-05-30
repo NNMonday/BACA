@@ -2,9 +2,14 @@ import React from "react";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import { Link, NavLink } from "react-router-dom";
+import { Badge } from "react-bootstrap"; // Import Badge component
 import logo from "../assets/logo.png";
 
 export default function MyNav() {
+  // Example cart item count, replace this with your actual cart item count
+  const cartItemCount = JSON.parse(localStorage.getItem("cart"))
+    ? JSON.parse(localStorage.getItem("cart")).length
+    : 0;
   return (
     <Navbar
       expand="md"
@@ -27,18 +32,19 @@ export default function MyNav() {
           <NavLink to={"/events"} className="nav-link px-md-4">
             Sự kiện
           </NavLink>
-          <a
-            href="https://forms.gle/9REpzcme1zMqq7M29"
-            target="_blank"
-            rel="noreferrer"
-            className="nav-link px-md-4"
-          >
+          <NavLink to={"/feedbacks"} className="nav-link px-md-4">
             Feedback
-          </a>
+          </NavLink>
         </Nav>
         <Nav className="align-items-md-center">
-          <Link to={"/cart"} className="me-3 my-3">
+          <Link to={"/cart"} className="me-4 my-3 position-relative">
             <i className="fa-solid fa-cart-shopping text-baca fs-4"></i>
+            <Badge
+              bg="white"
+              className="border border-black position-absolute translate-middle"
+            >
+              <span className="text-baca">{cartItemCount}</span>
+            </Badge>
           </Link>
           <Link to={"/"} className="text-white btn bg-baca">
             Đăng nhập

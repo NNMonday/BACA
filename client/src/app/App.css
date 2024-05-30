@@ -1,28 +1,51 @@
 :root {
-  --text-baca: #deb652;
+  --baca: #dcc295;
 }
 
 .text-baca {
-  color: var(--text-baca);
+  color: var(--baca);
 }
 
 .bg-baca {
-  background-color: var(--text-baca) !important;
+  background-color: var(--baca) !important;
+}
+
+.border-baca {
+  border: 1px solid var(--baca) !important;
 }
 
 .active {
-  color: var(--text-baca) !important;
+  color: var(--baca) !important;
   font-weight: bolder !important;
 }
 
 .item-img-container {
-  border: 1px solid var(--text-baca);
+  border: 1px solid var(--baca);
   border-radius: 15px;
   overflow: hidden;
   aspect-ratio: 1/1;
 }
 
+.cart-table {
+  border-radius: 15px 15px 0 0;
+}
+
 .cart-table tr th,
 .cart-table tr td {
   background-color: #fef6f3;
+}
+
+.custom-input:focus-visible {
+  outline-color: transparent !important;
+}
+
+.filter-btn:hover,
+.filter-btn:focus {
+  border-color: transparent !important;
+  background-color: var(--baca) !important;
+}
+
+.filter-btn:hover .filter-icon,
+.filter-btn:focus .filter-icon {
+  color: white !important;
 }
