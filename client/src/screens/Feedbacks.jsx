@@ -16,6 +16,7 @@ export default function Feedbacks() {
   const [feedback, setFeedback] = useState({
     name: "",
     // phoneNumber: "",
+    rating: 0,
     content: "",
     images: [],
   });
@@ -105,12 +106,15 @@ export default function Feedbacks() {
     e.preventDefault();
     try {
       for (const key in feedback) {
-        if (key !== "images") {
+        if (key !== "images" && key !== "rating") {
           if (feedback[key].trim() === "") {
             throw Error("Vui lòng nhập đủ thông tin feedback");
           }
+        } else if (key === "rating" && feedback.rating <= 0) {
+          throw Error("Vui lòng nhập đủ thông tin feedback");
         }
       }
+
       const res = await axios.post(
         process.env.REACT_APP_BACKEND_URL + "/api/review",
         { ...feedback }
@@ -122,6 +126,7 @@ export default function Feedbacks() {
       setFeedback({
         name: "",
         // phoneNumber: "",
+        rating: 0,
         content: "",
         images: [],
       });
@@ -131,6 +136,23 @@ export default function Feedbacks() {
         className: "bg-danger text-white",
       });
     }
+  };
+
+  const renderRating = (rating) => {
+    const filledStars = Math.floor(rating);
+    const emptyStars = 5 - filledStars;
+
+    const stars = [];
+
+    for (let i = 0; i < filledStars; i++) {
+      stars.push(<i key={i} className="text-warning fa-solid fa-star"></i>);
+    }
+
+    for (let i = 0; i < emptyStars; i++) {
+      stars.push(<i key={filledStars + i} className="fa-solid fa-star"></i>);
+    }
+
+    return stars;
   };
   return (
     <>
@@ -167,13 +189,7 @@ export default function Feedbacks() {
                     <div>
                       <strong>{f.name}</strong>
                     </div>
-                    <div>
-                      <i className="text-warning fa-solid fa-star"></i>
-                      <i className="text-warning fa-solid fa-star"></i>
-                      <i className="text-warning fa-solid fa-star"></i>
-                      <i className="fa-solid fa-star"></i>
-                      <i className="fa-solid fa-star"></i>
-                    </div>
+                    <div>{renderRating(f.rating)}</div>
                     <div>{f.content}</div>
                     <div className="mt-3 d-flex flex-wrap align-items-start">
                       {f.images.map((image, i) => (
@@ -248,9 +264,32 @@ export default function Feedbacks() {
                 }
               />
             </Form.Group> */}
-            <Form.Group controlId="content">
+            <Form.Group controlId="rating">
               <Form.Label>
                 Đánh giá <span className="text-danger">*</span>
+              </Form.Label>
+              <div className="d-flex mb-3">
+                {[1, 2, 3, 4, 5].map((rating) => (
+                  <i
+                    key={rating}
+                    className={`fa-solid fa-star ${
+                      rating <= feedback.rating ? "text-warning" : ""
+                    }`}
+                    style={{ cursor: "pointer" }}
+                    onClick={() =>
+                      setFeedback((prevFeedback) => ({
+                        ...prevFeedback,
+                        rating: rating,
+                      }))
+                    }
+                  ></i>
+                ))}
+              </div>
+            </Form.Group>
+
+            <Form.Group controlId="content">
+              <Form.Label>
+                Nội dung <span className="text-danger">*</span>
               </Form.Label>
               <Form.Control
                 className="mb-3"
