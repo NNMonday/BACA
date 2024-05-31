@@ -45,3 +45,6 @@
 .filter-btn:focus .filter-icon {
   color: white !important;
 }
+body {
+  overflow-x: hidden;
+}

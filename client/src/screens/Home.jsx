@@ -34,7 +34,6 @@ export default function Home() {
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
-
   // const thumbnailRatio = useMemo(() => 531 / 1440, []);
   // const headlineRef = useRef(null);
   // const thumbnailContainerRef = useRef(null);
@@ -61,7 +60,9 @@ export default function Home() {
   //     window.removeEventListener("resize", handleResize);
   //   };
   // }, [headlineRef, thumbnailContainerRef]);
-
+  {
+    /*process.env.REACT_APP_BACKEND_URL*/
+  }
   useEffect(() => {
     (async () => {
       try {
@@ -190,7 +191,11 @@ export default function Home() {
             <img src={thumbnail} alt="thumbnail" ref={thumbnailImgRef} />
           </div> */}
             <Link to={"/about"} className="d-block">
-              <img src={thumbnail} className="w-100" alt="thumbnail" />
+              <img
+                src={thumbnail}
+                className="w-100 object-fit-cover"
+                alt="thumbnail"
+              />
             </Link>
           </Col>
         </Row>

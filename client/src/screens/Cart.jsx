@@ -16,10 +16,9 @@ export default function Cart() {
   const [cart, setCart] = useState([]);
   const [customer, setCustomer] = useState({
     phoneNumber: "",
-    location: "",
-    name: "",
+    address: "",
+    receiver: "",
   });
-
   useEffect(() => {
     (async () => {
       const savedCart = JSON.parse(localStorage.getItem("cart")) || [];
@@ -27,12 +26,9 @@ export default function Cart() {
       savedCart.forEach((item) => {
         items.push(item._id);
       });
-      const resCart = await axios.post(
-        process.env.REACT_APP_BACKEND_URL + "/api/items/getItemsById",
-        {
-          items,
-        }
-      );
+      const resCart = await axios.post( process.env.REACT_APP_BACKEND_URL + "/api/items/getItemsById", {
+        items,
+      });
       setCart(
         [...resCart.data.data].map((item) => {
           const { quantity } = savedCart.find(
@@ -47,7 +43,6 @@ export default function Cart() {
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
-
   const saveToLocal = (cart) => {
     setCart(cart);
     localStorage.setItem(
@@ -89,6 +84,7 @@ export default function Cart() {
   };
 
   const navigate = useNavigate();
+  const handleSumbit = async (e) => {
   const handleSumbit = async (e) => {
     e.preventDefault();
 
@@ -171,7 +167,9 @@ export default function Cart() {
                           onClick={() => decreaseQuantity(index)}
                         ></i>
                       </div>
-                      <span className="mx-2">{i.quantity}</span>
+                      <span className="mx-2">
+                        {i.quantity} {i.unit}
+                      </span>
                       <div className="bg-baca d-flex justify-content-center align-items-center p-1 rounded-circle">
                         <i
                           className="fa-solid fa-plus"
@@ -249,7 +247,7 @@ export default function Cart() {
                 onChange={(e) =>
                   setCustomer((pre) => ({
                     ...pre,
-                    location: e.target.value,
+                    address: e.target.value,
                   }))
                 }
               />
@@ -259,11 +257,11 @@ export default function Cart() {
               <Form.Control
                 required
                 type="text"
-                value={customer.name}
+                value={customer.receiver}
                 onChange={(e) =>
                   setCustomer((pre) => ({
                     ...pre,
-                    name: e.target.value,
+                    receiver: e.target.value,
                   }))
                 }
               />
