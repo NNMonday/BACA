@@ -105,12 +105,12 @@ export default function Cart() {
         process.env.REACT_APP_BACKEND_URL + "/api/order",
         {
           phoneNumber: customer.phoneNumber,
-          address: customer.location,
+          address: customer.address,
           items: cart.map((item) => ({
             item: item._id,
             amount: item.quantity,
           })),
-          receiver: customer.name,
+          receiver: customer.receiver,
         }
       );
       toast(res.data.message, {

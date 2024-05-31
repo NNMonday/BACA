@@ -9,7 +9,7 @@ export default function AdminLogin() {
   return (
     <div style={{ backgroundColor: "#FFF7EB", width: "100%", height: "100vh" }}>
       <img
-        src={logoImg}
+        src={"https://res.cloudinary.com/djzdhtdpj/image/upload/v1717134715/logo_avt_rqjieh.png"}
         style={{ width: "400px", position: "relative", left: "580px" }}
         alt="admin-avatar"
       />
