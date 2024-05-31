@@ -22,6 +22,7 @@ import {
 import debounce from "lodash.debounce";
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
+import toast from "react-hot-toast";
 
 export default function Home() {
   const [items, setItems] = useState([]);
@@ -101,16 +102,35 @@ export default function Home() {
         newCart.push({ _id: item._id, quantity: 1 });
         updateCart(newCart);
       }
+      toast("Đã thêm vào giỏ hàng", { className: "bg-success text-white" });
     },
     [cart, updateCart]
   );
 
   const [search, setSearch] = useState("");
-  const debounceOnChange = useCallback(() => {
-    debounce((value) => {
-      console.log("search: ", value);
-    }, 500);
+  const fetchSearch = useCallback(async (search) => {
+    try {
+      const res =
+        search.length === 0
+          ? await axios.post(process.env.REACT_APP_BACKEND_URL + "/api/items", {
+              categories: [],
+            })
+          : await axios.get(
+              process.env.REACT_APP_BACKEND_URL + "/api/items/name/" + search
+            );
+      setItems(res.data.data);
+    } catch (error) {
+      console.log(error);
+    }
   }, []);
+
+  const debounceOnChange = useCallback(
+    debounce((value) => {
+      fetchSearch(value);
+    }, 500),
+    []
+  );
+
   const handleSearchChange = useCallback(
     (e) => {
       const newSearch = e.target.value;

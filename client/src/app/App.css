@@ -26,10 +26,6 @@
   aspect-ratio: 1/1;
 }
 
-.cart-table {
-  border-radius: 15px 15px 0 0;
-}
-
 .cart-table tr th,
 .cart-table tr td {
   background-color: #fef6f3;

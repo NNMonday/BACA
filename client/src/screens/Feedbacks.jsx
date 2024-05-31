@@ -1,6 +1,12 @@
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import MainLayout from "../layouts/MainLayout";
 import { Button, Col, Container, Row, Modal, Form } from "react-bootstrap";
+import axios from "axios";
+import { useNavigate, useParams } from "react-router-dom";
+import defaultAvatar from "../assets/default-avatar.png";
+import dropzone from "../assets/dropzone.png";
+import toast from "react-hot-toast";
+import { useDropzone } from "react-dropzone";
 
 export default function Feedbacks() {
   const [show, setShow] = useState(false);
@@ -9,54 +15,202 @@ export default function Feedbacks() {
 
   const [feedback, setFeedback] = useState({
     name: "",
-    phoneNumber: "",
+    // phoneNumber: "",
     content: "",
+    images: [],
   });
+
+  const [feedbackList, setFeedbackList] = useState([]);
+  const { page } = useParams();
+  const [totalPages, setTotalPages] = useState(1);
+  const fetchFeedbacks = useCallback(async () => {
+    try {
+      const res = await axios.get(
+        process.env.REACT_APP_BACKEND_URL + "/api/review/list/" + (page - 1)
+      );
+      setFeedbackList(res.data.data);
+      setTotalPages(res.data.totalPages);
+    } catch (error) {
+      console.log(error);
+    }
+    setReload(false);
+  }, [page]);
+
+  const [reload, setReload] = useState(true);
+
+  const navigate = useNavigate();
+  const handleNextPage = () => {
+    const nextPage = parseInt(page) + 1;
+    setFeedbackList([]);
+    setReload(true);
+    navigate(`/feedbacks/${nextPage}`);
+  };
+
+  const handlePreviousPage = () => {
+    const prevPage = parseInt(page) - 1;
+    setFeedbackList([]);
+    setReload(true);
+    navigate(`/feedbacks/${prevPage}`);
+  };
+
+  const renderPageNumbers = () => {
+    const pageNumbers = [];
+    for (let i = 1; i <= totalPages; i++) {
+      pageNumbers.push(
+        <Button
+          key={i}
+          variant={parseInt(page) === i ? "primary" : "secondary"}
+          onClick={() => {
+            setReload(true);
+            setFeedbackList([]);
+            navigate(`/feedbacks/${i}`);
+          }}
+        >
+          {i}
+        </Button>
+      );
+    }
+    return pageNumbers;
+  };
+
+  useEffect(() => {
+    reload && fetchFeedbacks();
+  }, [fetchFeedbacks, reload]);
+
+  const onDrop = useCallback(async (acceptedFiles) => {
+    try {
+      const imageFiles = await Promise.all(
+        acceptedFiles.map(async (file) => {
+          return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = reject;
+            reader.readAsDataURL(file);
+          });
+        })
+      );
+
+      setFeedback((prevFeedback) => ({
+        ...prevFeedback,
+        images: [...prevFeedback.images, ...imageFiles],
+      }));
+    } catch (error) {
+      console.error("Error encoding image files:", error);
+    }
+  }, []);
+
+  const { getRootProps, getInputProps } = useDropzone({ onDrop });
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      for (const key in feedback) {
+        if (key !== "images") {
+          if (feedback[key].trim() === "") {
+            throw Error("Vui lòng nhập đủ thông tin feedback");
+          }
+        }
+      }
+      const res = await axios.post(
+        process.env.REACT_APP_BACKEND_URL + "/api/review",
+        { ...feedback }
+      );
+      toast(res.data.message, {
+        className: "bg-success text-white",
+      });
+      handleClose();
+      setFeedback({
+        name: "",
+        // phoneNumber: "",
+        content: "",
+        images: [],
+      });
+      setReload(true);
+    } catch (error) {
+      toast(error.message, {
+        className: "bg-danger text-white",
+      });
+    }
+  };
   return (
     <>
       <MainLayout>
         <Container fluid className="pt-3">
-          <div className="d-flex w-100 justify-content-between align-items-center mb-5">
+          <div className="d-flex w-100 justify-content-between align-items-center">
             <span className="fs-1 text-baca">
-              <i class="fa-brands fa-wpforms me-2"></i>
+              <i className="fa-brands fa-wpforms me-2"></i>
               <span>Đánh giá</span>
             </span>
             <Button className="bg-baca text-baca border-0" onClick={handleShow}>
               Để lại đánh giá
             </Button>
           </div>
-          <Row className="pb-3" style={{ borderBottom: "1px solid black" }}>
-            <Col xs={2}>
-              <div className="w-100 rounded-circle overflow-hidden border border-dark">
-                <img
-                  className="w-100"
-                  src="https://fastly.picsum.photos/id/484/200/200.jpg?hmac=3rqhoyJTHVOGelhVPMaglcnpAMl_V3cvNkHZDpSz6_g"
-                  alt="avatar"
-                />
-              </div>
-            </Col>
-            <Col xs={10}>
-              <div>
-                <strong>Hoàng Nam</strong>
-              </div>
-              <div>
-                <i class="text-warning fa-solid fa-star"></i>
-                <i class="text-warning fa-solid fa-star"></i>
-                <i class="text-warning fa-solid fa-star"></i>
-                <i class="fa-solid fa-star"></i>
-                <i class="fa-solid fa-star"></i>
-              </div>
-              <div>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                Maecenas consectetur mollis faucibus. Curabitur feugiat nulla
-                metus, interdum efficitur nisl faucibus non
-              </div>
-            </Col>
-          </Row>
+          {feedbackList.map((f) => (
+            <Row
+              key={f._id}
+              className="pb-3 mt-3"
+              style={{ borderBottom: "1px solid black" }}
+            >
+              <Col>
+                <div className="d-flex">
+                  <div
+                    className="w-100 rounded-circle overflow-hidden border border-dark"
+                    style={{
+                      maxWidth: "60px",
+                      maxHeight: "60px",
+                      aspectRatio: "1/1",
+                    }}
+                  >
+                    <img className="w-100" src={defaultAvatar} alt="avatar" />
+                  </div>
+                  <div className="ms-3 flex-grow-1">
+                    <div>
+                      <strong>{f.name}</strong>
+                    </div>
+                    <div>
+                      <i className="text-warning fa-solid fa-star"></i>
+                      <i className="text-warning fa-solid fa-star"></i>
+                      <i className="text-warning fa-solid fa-star"></i>
+                      <i className="fa-solid fa-star"></i>
+                      <i className="fa-solid fa-star"></i>
+                    </div>
+                    <div>{f.content}</div>
+                    <div className="mt-3 d-flex flex-wrap align-items-start">
+                      {f.images.map((image, i) => (
+                        <img
+                          key={i}
+                          src={image}
+                          style={{ maxWidth: "100px" }}
+                          alt="feedback"
+                        />
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </Col>
+            </Row>
+          ))}
+          <div className="d-flex justify-content-between align-items-center mt-3">
+            <Button
+              variant="secondary"
+              disabled={parseInt(page) === 1}
+              onClick={handlePreviousPage}
+            >
+              Previous
+            </Button>
+            <div>{renderPageNumbers()}</div>
+            <Button
+              variant="secondary"
+              disabled={parseInt(page) === totalPages}
+              onClick={handleNextPage}
+            >
+              Next
+            </Button>
+          </div>
         </Container>
       </MainLayout>
       <Modal show={show} onHide={handleClose} centered>
-        <Form>
+        <Form onSubmit={handleSubmit}>
           <Modal.Header closeButton>
             <Modal.Title>
               <span className="text-baca">Để lại đánh giá</span>
@@ -77,7 +231,7 @@ export default function Feedbacks() {
                 }
               />
             </Form.Group>
-            <Form.Group controlId="phoneNumber">
+            {/* <Form.Group controlId="phoneNumber">
               <Form.Label>
                 Số điện thoại <span className="text-danger">*</span>
               </Form.Label>
@@ -93,7 +247,7 @@ export default function Feedbacks() {
                   }))
                 }
               />
-            </Form.Group>
+            </Form.Group> */}
             <Form.Group controlId="content">
               <Form.Label>
                 Đánh giá <span className="text-danger">*</span>
@@ -109,16 +263,28 @@ export default function Feedbacks() {
                 }
               />
             </Form.Group>
-            <Form.Group controlId="formFileMultiple" className="mb-3">
-              <Form.Label>Hình ảnh/video đính kèm</Form.Label>
-              <Form.Control type="file" multiple />
-            </Form.Group>
+            <div {...getRootProps()}>
+              <Form.Label>Hình ảnh/Video:</Form.Label>
+              <div className="mt-3d-flex flex-wrap align-items-start">
+                {feedback.images.map((image, i) => (
+                  <img
+                    key={i}
+                    src={image}
+                    style={{ maxWidth: "100px" }}
+                    alt="feedback"
+                    className="me-2"
+                  />
+                ))}
+              </div>
+              <input {...getInputProps()} />
+              <img src={dropzone} className="w-100" alt="dropzone" />
+            </div>
           </Modal.Body>
           <Modal.Footer>
             <Button variant="secondary" onClick={handleClose}>
               Close
             </Button>
-            <Button className="border-0 bg-baca" onClick={handleClose}>
+            <Button className="border-0 bg-baca" type="submit">
               Gửi đánh giá
             </Button>
           </Modal.Footer>

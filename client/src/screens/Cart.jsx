@@ -10,6 +10,7 @@ import {
 import Modal from "react-bootstrap/Modal";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 export default function Cart() {
   const [cart, setCart] = useState([]);
@@ -43,8 +44,6 @@ export default function Cart() {
     })();
   }, []);
 
-  useEffect(() => {}, [cart]);
-
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -60,9 +59,11 @@ export default function Cart() {
   };
 
   const handleDelete = (index) => {
-    const copiedCart = [...cart];
-    copiedCart.splice(index, 1);
-    saveToLocal(copiedCart);
+    if (window.confirm(`Do you want to delete ${cart[index].name}`)) {
+      const copiedCart = [...cart];
+      copiedCart.splice(index, 1);
+      saveToLocal(copiedCart);
+    } else return;
   };
 
   const increaseQuantity = (index) => {
@@ -75,10 +76,7 @@ export default function Cart() {
   };
 
   const decreaseQuantity = (index) => {
-    if (
-      cart[index].quantity === 1 &&
-      window.confirm(`Do you want to delete ${cart[index].name}`)
-    ) {
+    if (cart[index].quantity === 1) {
       handleDelete(index);
     } else {
       const copiedCart = [...cart];
@@ -91,23 +89,41 @@ export default function Cart() {
   };
 
   const navigate = useNavigate();
-  const handleSumbit = (e) => {
+  const handleSumbit = async (e) => {
     e.preventDefault();
-    const errors = [];
 
-    for (const key in customer) {
-      if (customer[key].trim() === "") {
-        window.alert("Vui lòng nhập đủ thông tin người nhận");
-        return;
+    try {
+      for (const key in customer) {
+        if (customer[key].trim() === "") {
+          throw Error("Vui lòng nhập đủ thông tin người nhận");
+        }
       }
-    }
 
-    if (!validatePhoneNumber(customer.phoneNumber)) {
-      errors.push("Số điện thoại sai định dạng");
-    }
+      if (!validatePhoneNumber(customer.phoneNumber)) {
+        throw Error("Số điện thoại sai định dạng");
+      }
 
-    if (errors.length > 0) {
-      window.alert(errors.join("\n"));
+      const res = await axios.post(
+        process.env.REACT_APP_BACKEND_URL + "/api/order",
+        {
+          phoneNumber: customer.phoneNumber,
+          address: customer.location,
+          items: cart.map((item) => ({
+            item: item._id,
+            amount: item.quantity,
+          })),
+          receiver: customer.name,
+        }
+      );
+      toast(res.data.message, {
+        className: "bg-success text-white",
+      });
+      localStorage.setItem("cart", "[]");
+      navigate("/");
+    } catch (error) {
+      toast(error.message, {
+        className: "bg-danger text-white",
+      });
     }
   };
 
@@ -163,7 +179,7 @@ export default function Cart() {
                         ></i>
                       </div>
                     </div>
-                    <div>
+                    <div className="me-4">
                       <strong>{i.name}</strong>
                     </div>
                     <div className="mt-2">
@@ -257,7 +273,7 @@ export default function Cart() {
             <Button variant="secondary" onClick={handleClose}>
               Đóng
             </Button>
-            <Button variant="success" type="submit">
+            <Button className="bg-baca border-0" type="submit">
               Xác nhận đặt hàng
             </Button>
           </Modal.Footer>

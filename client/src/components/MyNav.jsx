@@ -32,7 +32,7 @@ export default function MyNav() {
           <NavLink to={"/events"} className="nav-link px-md-4">
             Sự kiện
           </NavLink>
-          <NavLink to={"/feedbacks"} className="nav-link px-md-4">
+          <NavLink to={"/feedbacks/1"} className="nav-link px-md-4">
             Feedback
           </NavLink>
         </Nav>

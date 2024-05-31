@@ -17,7 +17,6 @@ export default function MainLayout({ children }) {
     <Container fluid className="p-0">
       <MyNav />
       <div style={{ marginTop: navbarHeight + "px" }}>{children}</div>
-      <div style={{ height: "1000px" }}></div>
     </Container>
   );
 }
