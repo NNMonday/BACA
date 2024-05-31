@@ -26,9 +26,12 @@ export default function Cart() {
       savedCart.forEach((item) => {
         items.push(item._id);
       });
-      const resCart = await axios.post( process.env.REACT_APP_BACKEND_URL + "/api/items/getItemsById", {
-        items,
-      });
+      const resCart = await axios.post(
+        process.env.REACT_APP_BACKEND_URL + "/api/items/getItemsById",
+        {
+          items,
+        }
+      );
       setCart(
         [...resCart.data.data].map((item) => {
           const { quantity } = savedCart.find(
@@ -84,7 +87,6 @@ export default function Cart() {
   };
 
   const navigate = useNavigate();
-  const handleSumbit = async (e) => {
   const handleSumbit = async (e) => {
     e.preventDefault();
 

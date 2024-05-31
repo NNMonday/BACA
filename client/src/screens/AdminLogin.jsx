@@ -11,6 +11,7 @@ export default function AdminLogin() {
       <img
         src={logoImg}
         style={{ width: "400px", position: "relative", left: "580px" }}
+        alt="admin-avatar"
       />
       <h6 style={{ textAlign: "center" }}>Trang quản lý đơn hàng</h6>
       <Form style={{ width: "30%", margin: "10px auto" }}>
