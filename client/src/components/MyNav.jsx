@@ -17,7 +17,7 @@ export default function MyNav() {
     >
       <Navbar.Brand>
         <Link to={"/"} className="d-inline-block">
-          <img src={logo} alt="Logo" />
+          <img src={logo} alt="Logo" width={60} />
         </Link>
       </Navbar.Brand>
       <Navbar.Toggle aria-controls="my-nav" />

@@ -1,5 +1,4 @@
 import { Button, Form, FormControl } from "react-bootstrap";
-import logoImg from "../assets/logo + avt.png";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
@@ -9,7 +8,9 @@ export default function AdminLogin() {
   return (
     <div style={{ backgroundColor: "#FFF7EB", width: "100%", height: "100vh" }}>
       <img
-        src={"https://res.cloudinary.com/djzdhtdpj/image/upload/v1717134715/logo_avt_rqjieh.png"}
+        src={
+          "https://res.cloudinary.com/djzdhtdpj/image/upload/v1717134715/logo_avt_rqjieh.png"
+        }
         style={{ width: "400px", position: "relative", left: "580px" }}
         alt="admin-avatar"
       />
