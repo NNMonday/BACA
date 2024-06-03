@@ -20,7 +20,18 @@ export default function MyNav() {
           <img src={logo} alt="Logo" width={60} />
         </Link>
       </Navbar.Brand>
-      <Navbar.Toggle aria-controls="my-nav" />
+      <div>
+        <Link to={"/cart"} className="me-4 my-3 position-relative d-md-none">
+          <i className="fa-solid fa-cart-shopping text-baca fs-4"></i>
+          <Badge
+            bg="white"
+            className="border border-black position-absolute translate-middle"
+          >
+            <span className="text-baca">{cartItemCount}</span>
+          </Badge>
+        </Link>
+        <Navbar.Toggle aria-controls="my-nav" />
+      </div>
       <Navbar.Collapse id="my-nav" className="fs-5">
         <Nav className="flex-grow-1 justify-content-center">
           <NavLink to={"/"} className="nav-link px-md-4">
@@ -37,7 +48,10 @@ export default function MyNav() {
           </NavLink>
         </Nav>
         <Nav className="align-items-md-center">
-          <Link to={"/cart"} className="me-4 my-3 position-relative">
+          <Link
+            to={"/cart"}
+            className="me-4 my-3 position-relative d-none d-md-inline"
+          >
             <i className="fa-solid fa-cart-shopping text-baca fs-4"></i>
             <Badge
               bg="white"

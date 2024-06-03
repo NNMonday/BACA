@@ -60,9 +60,6 @@ export default function Home() {
   //     window.removeEventListener("resize", handleResize);
   //   };
   // }, [headlineRef, thumbnailContainerRef]);
-  {
-    /*process.env.REACT_APP_BACKEND_URL*/
-  }
   useEffect(() => {
     (async () => {
       try {
