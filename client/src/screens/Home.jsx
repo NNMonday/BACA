@@ -165,16 +165,17 @@ export default function Home() {
 
           {items.map((item, i) => (
             <Col key={i} lg={3} md={4} xs={6} className="baca-item mb-2">
-              <Card border="0">
+              <Card border="0" className="h-100">
                 <div className="item-img-container">
                   <Card.Img
                     className="w-100 h-100"
+                    // style={{ objectFit: "cover", objectPosition: "center" }}
                     variant="top"
                     src={item.image}
                     alt={item.name}
                   />
                 </div>
-                <Card.Body>
+                <Card.Body className="d-flex flex-column justify-content-between">
                   <Card.Title>{capitalizeString(item.name)}</Card.Title>
                   <Card.Text>{item.description}</Card.Text>
                   <div className="d-flex justify-content-between">
