@@ -146,7 +146,12 @@ export default function Cart() {
                       className="item-img-container d-inline-block border-black me-2"
                       style={{ width: "80px" }}
                     >
-                      <img src={i.image} alt={i.name} className="h-100 w-100" />
+                      <img
+                        src={i.image}
+                        alt={i.name}
+                        className="h-100 w-100"
+                        style={{ objectFit: "cover", objectPosition: "center" }}
+                      />
                     </div>
                   </td>
                   <td className="position-relative">

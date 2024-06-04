@@ -169,7 +169,7 @@ export default function Home() {
                 <div className="item-img-container">
                   <Card.Img
                     className="w-100 h-100"
-                    // style={{ objectFit: "cover", objectPosition: "center" }}
+                    style={{ objectFit: "cover", objectPosition: "center" }}
                     variant="top"
                     src={item.image}
                     alt={item.name}
