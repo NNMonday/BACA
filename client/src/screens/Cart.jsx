@@ -149,7 +149,7 @@ export default function Cart() {
                       <img src={i.image} alt={i.name} className="h-100 w-100" />
                     </div>
                   </td>
-                  <td>
+                  <td className="position-relative">
                     <div
                       className="mt-2 me-2 position-absolute bg-transparent d-flex"
                       style={{ top: "0", right: "0" }}

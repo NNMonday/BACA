@@ -1,10 +1,4 @@
-import React, {
-  useCallback,
-  useEffect,
-  useState,
-  // useRef,
-  // useMemo,
-} from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import thumbnail from "../assets/thumbnail.png";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
@@ -34,32 +28,7 @@ export default function Home() {
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
-  // const thumbnailRatio = useMemo(() => 531 / 1440, []);
-  // const headlineRef = useRef(null);
-  // const thumbnailContainerRef = useRef(null);
-  // const thumbnailImgRef = useRef(null);
-  // useEffect(() => {
-  //   const handleResize = () => {
-  //     if (headlineRef.current && thumbnailContainerRef.current) {
-  //       const newHeight = headlineRef.current.offsetHeight + 30;
-  //       const contanerWidthLongerThanImgWidth =
-  //         window.innerWidth > newHeight / thumbnailRatio;
-  //       thumbnailContainerRef.current.style.height =
-  //         contanerWidthLongerThanImgWidth ? "auto" : `calc(${newHeight}px)`;
-  //       thumbnailImgRef.current.classList = contanerWidthLongerThanImgWidth
-  //         ? "w-100"
-  //         : "h-100";
-  //     }
-  //   };
 
-  //   handleResize();
-
-  //   window.addEventListener("resize", handleResize);
-
-  //   return () => {
-  //     window.removeEventListener("resize", handleResize);
-  //   };
-  // }, [headlineRef, thumbnailContainerRef]);
   useEffect(() => {
     (async () => {
       try {
@@ -161,32 +130,6 @@ export default function Home() {
       <MainLayout>
         <Row>
           <Col>
-            {/* <div
-            className="pt-5 ps-5 position-absolute headline"
-            ref={headlineRef}
-          >
-            <h1 className="text-baca" style={{ fontSize: "5vw" }}>
-              BACA
-            </h1>
-            <h1 className="mb-4" style={{ fontSize: "5vw" }}>
-              Bánh Cá Ngũ Vị
-            </h1>
-            <p className="d-none d-md-block" style={{ width: "35%" }}>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam
-              molestie libero eros, ut bibendum arcu dapibus nec. Integer nisi
-              neque, convallis ut tortor eget, aliquet interdum purus.
-            </p>
-            <Link to={"/about"} className="btn bg-baca text-white mt-md-3">
-              Tìm hiểu thêm
-            </Link>
-          </div>
-          <div
-            className="thumbnail-container"
-            ref={thumbnailContainerRef}
-            style={{ minHeight: "200px" }}
-          >
-            <img src={thumbnail} alt="thumbnail" ref={thumbnailImgRef} />
-          </div> */}
             <Link to={"/about"} className="d-block">
               <img
                 src={thumbnail}
