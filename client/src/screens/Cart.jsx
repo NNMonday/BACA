@@ -215,7 +215,7 @@ export default function Cart() {
                           cart.length === 0 ? navigate("/") : handleShow();
                         }}
                       >
-                        Thanh toán
+                        Đặt hàng
                       </span>
                     </Button>
                   </div>
