@@ -25,7 +25,6 @@ export default function Home() {
     JSON.parse(localStorage.getItem("cart")) || []
   );
   const [categories, setCategories] = useState([]);
-
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -67,12 +66,16 @@ export default function Home() {
           _id: item._id,
           quantity: newCart[existIdIndex].quantity + 1,
         };
-        updateCart(newCart);
+        toast(`+1 ${item.name}`, {
+          className: "bg-success text-white text-center",
+        });
       } else {
         newCart.push({ _id: item._id, quantity: 1 });
-        updateCart(newCart);
+        toast(`Đã thêm ${item.name} vào giỏ hàng`, {
+          className: "bg-success text-white text-center",
+        });
       }
-      toast("Đã thêm vào giỏ hàng", { className: "bg-success text-white" });
+      updateCart(newCart);
     },
     [cart, updateCart]
   );
@@ -105,6 +108,7 @@ export default function Home() {
 
   const debounceOnChange = useCallback(
     debounce((value) => {
+      console.log(value);
       fetchSearch(value);
     }, 500),
     []

@@ -41,7 +41,7 @@ export default function Cart() {
           return { ...item, quantity };
         })
       );
-      setLoading(true);
+      setLoading(false);
     })();
   }, []);
 
@@ -143,7 +143,11 @@ export default function Cart() {
           >
             <tbody>
               {loading ? (
-                <h1>Loading</h1>
+                <tr>
+                  <td>
+                    <h1>Loading</h1>
+                  </td>
+                </tr>
               ) : (
                 cart.map((i, index) => (
                   <tr
