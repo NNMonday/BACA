@@ -75,21 +75,28 @@ export default function Home() {
   );
 
   const [search, setSearch] = useState("");
-  const fetchSearch = useCallback(async (search) => {
-    try {
-      const res =
-        search.length === 0
-          ? await axios.post(process.env.REACT_APP_BACKEND_URL + "/api/items", {
-              categories: [],
-            })
-          : await axios.get(
-              process.env.REACT_APP_BACKEND_URL + "/api/items/name/" + search
-            );
-      setItems(res.data.data);
-    } catch (error) {
-      console.log(error);
-    }
-  }, []);
+  const [filter, setFilter] = useState({
+    categories: [],
+  });
+  const fetchSearch = useCallback(
+    async (search) => {
+      console.log(search);
+      try {
+        const res = await axios.post(
+          process.env.REACT_APP_BACKEND_URL + "/api/items",
+          {
+            name: search,
+            categories: filter.categories,
+          }
+        );
+        console.log(res);
+        setItems(res.data.data);
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    [filter]
+  );
 
   const debounceOnChange = useCallback(
     debounce((value) => {
@@ -106,24 +113,6 @@ export default function Home() {
     },
     [debounceOnChange]
   );
-
-  const [filter, setFilter] = useState({
-    categories: [],
-  });
-  const handleFilter = async () => {
-    try {
-      const resItems = await axios.post(
-        process.env.REACT_APP_BACKEND_URL + "/api/items",
-        {
-          categories: filter.categories,
-        }
-      );
-      setItems(resItems.data.data);
-    } catch (error) {
-      console.log(error);
-    }
-    handleClose();
-  };
 
   return (
     <>
@@ -224,7 +213,10 @@ export default function Home() {
           <Button variant="secondary" onClick={handleClose}>
             Close
           </Button>
-          <Button className="bg-baca border-0" onClick={handleFilter}>
+          <Button
+            className="bg-baca border-0"
+            onClick={() => fetchSearch(search)}
+          >
             Save Changes
           </Button>
         </Modal.Footer>

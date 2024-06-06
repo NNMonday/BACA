@@ -133,7 +133,12 @@ export default function Cart() {
           <span>Giỏ Hàng</span>
         </h2>
         <div className="d-flex justify-content-center mt-3">
-          <Table bordered className="w-75 cart-table overflow-hidden" hover>
+          <Table
+            bordered
+            className="w-75 cart-table overflow-hidden"
+            hover
+            style={{ minWidth: "300px" }}
+          >
             <tbody>
               {cart.map((i, index) => (
                 <tr
