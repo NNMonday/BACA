@@ -19,6 +19,7 @@ import Form from "react-bootstrap/Form";
 import toast from "react-hot-toast";
 
 export default function Home() {
+  const [loading, setLoading] = useState(true);
   const [items, setItems] = useState([]);
   const [cart, setCart] = useState(
     JSON.parse(localStorage.getItem("cart")) || []
@@ -32,6 +33,7 @@ export default function Home() {
   useEffect(() => {
     (async () => {
       try {
+        setLoading(true);
         const resCategories = await axios.get(
           process.env.REACT_APP_BACKEND_URL + "/api/category"
         );
@@ -44,6 +46,7 @@ export default function Home() {
 
         setItems(resItems.data.data);
         setCategories(resCategories.data.data);
+        setLoading(false);
       } catch (error) {
         console.log(error);
       }
@@ -82,6 +85,7 @@ export default function Home() {
     async (search) => {
       console.log(search);
       try {
+        setLoading(true);
         const res = await axios.post(
           process.env.REACT_APP_BACKEND_URL + "/api/items",
           {
@@ -91,6 +95,7 @@ export default function Home() {
         );
         console.log(res);
         setItems(res.data.data);
+        setLoading(false);
       } catch (error) {
         console.log(error);
       }
@@ -152,36 +157,40 @@ export default function Home() {
             </Button>
           </div>
 
-          {items.map((item, i) => (
-            <Col key={i} lg={3} md={4} xs={6} className="baca-item mb-2">
-              <Card border="0" className="h-100">
-                <div className="item-img-container">
-                  <Card.Img
-                    className="w-100 h-100"
-                    style={{ objectFit: "cover", objectPosition: "center" }}
-                    variant="top"
-                    src={item.image}
-                    alt={item.name}
-                  />
-                </div>
-                <Card.Body className="d-flex flex-column justify-content-between">
-                  <Card.Title>{capitalizeString(item.name)}</Card.Title>
-                  <Card.Text>{item.description}</Card.Text>
-                  <div className="d-flex justify-content-between">
-                    <Button
-                      className="bg-transparent border-0 p-0"
-                      onClick={() => addItem(item)}
-                    >
-                      <i className="fa-solid fa-cart-shopping text-baca fs-4"></i>
-                    </Button>
-                    <span className="text-baca fw-bold">
-                      {numberWithDots(item.price)}đ/{item.unit}
-                    </span>
+          {loading ? (
+            <h1>Loading...</h1>
+          ) : (
+            items.map((item, i) => (
+              <Col key={i} lg={3} md={4} xs={6} className="baca-item mb-2">
+                <Card border="0" className="h-100">
+                  <div className="item-img-container">
+                    <Card.Img
+                      className="w-100 h-100"
+                      style={{ objectFit: "cover", objectPosition: "center" }}
+                      variant="top"
+                      src={item.image}
+                      alt={item.name}
+                    />
                   </div>
-                </Card.Body>
-              </Card>
-            </Col>
-          ))}
+                  <Card.Body className="d-flex flex-column justify-content-between">
+                    <Card.Title>{capitalizeString(item.name)}</Card.Title>
+                    <Card.Text>{item.description}</Card.Text>
+                    <div className="d-flex justify-content-between">
+                      <Button
+                        className="bg-transparent border-0 p-0"
+                        onClick={() => addItem(item)}
+                      >
+                        <i className="fa-solid fa-cart-shopping text-baca fs-4"></i>
+                      </Button>
+                      <span className="text-baca fw-bold">
+                        {numberWithDots(item.price)}đ/{item.unit}
+                      </span>
+                    </div>
+                  </Card.Body>
+                </Card>
+              </Col>
+            ))
+          )}
         </Row>
       </MainLayout>
       <Modal show={show} onHide={handleClose} centered>

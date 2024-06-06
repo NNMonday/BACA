@@ -13,6 +13,7 @@ import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 
 export default function Cart() {
+  const [loading, setLoading] = useState(true);
   const [cart, setCart] = useState([]);
   const [customer, setCustomer] = useState({
     phoneNumber: "",
@@ -40,6 +41,7 @@ export default function Cart() {
           return { ...item, quantity };
         })
       );
+      setLoading(true);
     })();
   }, []);
 
@@ -140,66 +142,73 @@ export default function Cart() {
             style={{ minWidth: "300px" }}
           >
             <tbody>
-              {cart.map((i, index) => (
-                <tr
-                  key={i._id}
-                  className="cart-item"
-                  style={{ position: "relative" }}
-                >
-                  <td>
-                    <div
-                      className="item-img-container d-inline-block border-black me-2"
-                      style={{ width: "80px" }}
-                    >
-                      <img
-                        src={i.image}
-                        alt={i.name}
-                        className="h-100 w-100"
-                        style={{ objectFit: "cover", objectPosition: "center" }}
-                      />
-                    </div>
-                  </td>
-                  <td className="position-relative">
-                    <div
-                      className="mt-2 me-2 position-absolute bg-transparent d-flex"
-                      style={{ top: "0", right: "0" }}
-                    >
-                      <i
-                        className="fa-solid fa-x"
-                        onClick={() => handleDelete(index)}
-                      ></i>
-                    </div>
-                    <div
-                      className="mb-2 me-2 position-absolute bg-transparent d-flex"
-                      style={{ bottom: "0", right: "0" }}
-                    >
-                      <div className="bg-white d-flex justify-content-center align-items-center p-1 rounded-circle border-baca">
+              {loading ? (
+                <h1>Loading</h1>
+              ) : (
+                cart.map((i, index) => (
+                  <tr
+                    key={i._id}
+                    className="cart-item"
+                    style={{ position: "relative" }}
+                  >
+                    <td>
+                      <div
+                        className="item-img-container d-inline-block border-black me-2"
+                        style={{ width: "80px" }}
+                      >
+                        <img
+                          src={i.image}
+                          alt={i.name}
+                          className="h-100 w-100"
+                          style={{
+                            objectFit: "cover",
+                            objectPosition: "center",
+                          }}
+                        />
+                      </div>
+                    </td>
+                    <td className="position-relative">
+                      <div
+                        className="mt-2 me-2 position-absolute bg-transparent d-flex"
+                        style={{ top: "0", right: "0" }}
+                      >
                         <i
-                          className="fa-solid fa-minus"
-                          onClick={() => decreaseQuantity(index)}
+                          className="fa-solid fa-x"
+                          onClick={() => handleDelete(index)}
                         ></i>
                       </div>
-                      <span className="mx-2">
-                        {i.quantity} {i.unit}
-                      </span>
-                      <div className="bg-baca d-flex justify-content-center align-items-center p-1 rounded-circle">
-                        <i
-                          className="fa-solid fa-plus"
-                          onClick={() => increaseQuantity(index)}
-                        ></i>
+                      <div
+                        className="mb-2 me-2 position-absolute bg-transparent d-flex"
+                        style={{ bottom: "0", right: "0" }}
+                      >
+                        <div className="bg-white d-flex justify-content-center align-items-center p-1 rounded-circle border-baca">
+                          <i
+                            className="fa-solid fa-minus"
+                            onClick={() => decreaseQuantity(index)}
+                          ></i>
+                        </div>
+                        <span className="mx-2">
+                          {i.quantity} {i.unit}
+                        </span>
+                        <div className="bg-baca d-flex justify-content-center align-items-center p-1 rounded-circle">
+                          <i
+                            className="fa-solid fa-plus"
+                            onClick={() => increaseQuantity(index)}
+                          ></i>
+                        </div>
                       </div>
-                    </div>
-                    <div className="me-4">
-                      <strong>{i.name}</strong>
-                    </div>
-                    <div className="mt-2">
-                      <strong className="text-danger">
-                        {numberWithDots(i.price * i.quantity)}đ
-                      </strong>
-                    </div>
-                  </td>
-                </tr>
-              ))}
+                      <div className="me-4">
+                        <strong>{i.name}</strong>
+                      </div>
+                      <div className="mt-2">
+                        <strong className="text-danger">
+                          {numberWithDots(i.price * i.quantity)}đ
+                        </strong>
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              )}
 
               <tr className="last-row">
                 <td
