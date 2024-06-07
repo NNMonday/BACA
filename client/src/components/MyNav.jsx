@@ -8,7 +8,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCartShopping } from "@fortawesome/free-solid-svg-icons";
 
 export default function MyNav() {
-  // Example cart item count, replace this with your actual cart item count
   const cartItemCount = JSON.parse(localStorage.getItem("cart"))
     ? JSON.parse(localStorage.getItem("cart")).length
     : 0;

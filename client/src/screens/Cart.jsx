@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import MainLayout from "../layouts/MainLayout";
 import Table from "react-bootstrap/Table";
 import { Button, Form } from "react-bootstrap";
@@ -28,6 +28,7 @@ export default function Cart() {
     receiver: "",
     note: "",
   });
+
   useEffect(() => {
     (async () => {
       const savedCart = JSON.parse(localStorage.getItem("cart")) || [];
@@ -56,7 +57,8 @@ export default function Cart() {
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
-  const saveToLocal = (cart) => {
+
+  const saveToLocal = useCallback((cart) => {
     setCart(cart);
     localStorage.setItem(
       "cart",
@@ -64,76 +66,87 @@ export default function Cart() {
         cart.map((item) => ({ _id: item._id, quantity: item.quantity }))
       )
     );
-  };
+  }, []);
 
-  const handleDelete = (index) => {
-    if (window.confirm(`Do you want to delete ${cart[index].name}`)) {
-      const copiedCart = [...cart];
-      copiedCart.splice(index, 1);
-      saveToLocal(copiedCart);
-    } else return;
-  };
+  const handleDelete = useCallback(
+    (index) => {
+      if (window.confirm(`Do you want to delete ${cart[index].name}`)) {
+        const copiedCart = [...cart];
+        copiedCart.splice(index, 1);
+        saveToLocal(copiedCart);
+      } else return;
+    },
+    [cart, saveToLocal]
+  );
 
-  const increaseQuantity = (index) => {
-    const copiedCart = [...cart];
-    copiedCart[index] = {
-      ...copiedCart[index],
-      quantity: copiedCart[index].quantity + 1,
-    };
-    saveToLocal(copiedCart);
-  };
-
-  const decreaseQuantity = (index) => {
-    if (cart[index].quantity === 1) {
-      handleDelete(index);
-    } else {
+  const increaseQuantity = useCallback(
+    (index) => {
       const copiedCart = [...cart];
       copiedCart[index] = {
         ...copiedCart[index],
-        quantity: copiedCart[index].quantity - 1,
+        quantity: copiedCart[index].quantity + 1,
       };
       saveToLocal(copiedCart);
-    }
-  };
+    },
+    [cart, saveToLocal]
+  );
+
+  const decreaseQuantity = useCallback(
+    (index) => {
+      if (cart[index].quantity === 1) {
+        handleDelete(index);
+      } else {
+        const copiedCart = [...cart];
+        copiedCart[index] = {
+          ...copiedCart[index],
+          quantity: copiedCart[index].quantity - 1,
+        };
+        saveToLocal(copiedCart);
+      }
+    },
+    [cart, handleDelete, saveToLocal]
+  );
 
   const navigate = useNavigate();
-  const handleSumbit = async (e) => {
-    e.preventDefault();
-
-    try {
-      for (const key in customer) {
-        if (customer[key].trim() === "") {
-          throw Error("Vui lòng nhập đủ thông tin người nhận");
+  const handleSumbit = useCallback(
+    async (e) => {
+      e.preventDefault();
+      try {
+        for (const key in customer) {
+          if (customer[key].trim() === "") {
+            throw Error("Vui lòng nhập đủ thông tin người nhận");
+          }
         }
-      }
 
-      if (!validatePhoneNumber(customer.phoneNumber)) {
-        throw Error("Số điện thoại sai định dạng");
-      }
-
-      const res = await axios.post(
-        process.env.REACT_APP_BACKEND_URL + "/api/order",
-        {
-          phoneNumber: customer.phoneNumber,
-          address: customer.address,
-          items: cart.map((item) => ({
-            item: item._id,
-            amount: item.quantity,
-          })),
-          receiver: customer.receiver,
+        if (!validatePhoneNumber(customer.phoneNumber)) {
+          throw Error("Số điện thoại sai định dạng");
         }
-      );
-      toast(res.data.message, {
-        className: "bg-success text-white",
-      });
-      localStorage.setItem("cart", "[]");
-      navigate("/");
-    } catch (error) {
-      toast(error.message, {
-        className: "bg-danger text-white",
-      });
-    }
-  };
+
+        const res = await axios.post(
+          process.env.REACT_APP_BACKEND_URL + "/api/order",
+          {
+            phoneNumber: customer.phoneNumber,
+            address: customer.address,
+            items: cart.map((item) => ({
+              item: item._id,
+              amount: item.quantity,
+            })),
+            receiver: customer.receiver,
+          }
+        );
+        toast(res.data.message, {
+          className: "bg-success text-white",
+        });
+        localStorage.setItem("cart", "[]");
+        navigate("/");
+      } catch (error) {
+        toast(error.message, {
+          className: "bg-danger text-white",
+        });
+      }
+    },
+    [cart, customer, navigate]
+  );
 
   return (
     <>

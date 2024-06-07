@@ -1,5 +1,6 @@
 import React, { Suspense, lazy } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Fallback from "../components/Fallback";
 
 const Home = lazy(() => import("../screens/Home"));
 const About = lazy(() => import("../screens/About"));
@@ -12,7 +13,7 @@ const Order = lazy(() => import("../screens/Order"));
 export default function MyRoute() {
   return (
     <BrowserRouter>
-      <Suspense fallback={<div>Loading...</div>}>
+      <Suspense fallback={<Fallback />}>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
