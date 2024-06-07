@@ -19,7 +19,7 @@ export default function MyNav() {
     >
       <Navbar.Brand>
         <Link to={"/"} className="d-inline-block">
-          <img src={logo} alt="Logo" width={60} loading="lazy" />
+          <img src={logo} alt="Logo" width={60} />
         </Link>
       </Navbar.Brand>
       <div className="d-md-none">

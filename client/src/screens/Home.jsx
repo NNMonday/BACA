@@ -141,7 +141,6 @@ export default function Home() {
           <Col>
             <Link to={"/about"} className="d-block">
               <img
-                loading="lazy"
                 src={thumbnail}
                 className="w-100 object-fit-cover"
                 alt="thumbnail"
@@ -187,6 +186,7 @@ export default function Home() {
                 <Card border="0" className="h-100">
                   <div className="item-img-container">
                     <Card.Img
+                      loading="lazy"
                       className="w-100 h-100"
                       style={{ objectFit: "cover", objectPosition: "center" }}
                       variant="top"
