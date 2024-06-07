@@ -26,6 +26,7 @@ export default function Cart() {
     phoneNumber: "",
     address: "",
     receiver: "",
+    note: "",
   });
   useEffect(() => {
     (async () => {
@@ -294,6 +295,22 @@ export default function Cart() {
                   setCustomer((pre) => ({
                     ...pre,
                     receiver: e.target.value,
+                  }))
+                }
+              />
+            </Form.Group>
+            <Form.Group>
+              <Form.Label>Ghi chú</Form.Label>
+              <Form.Control
+                as="textarea"
+                rows={3}
+                required
+                type="text"
+                value={customer.note}
+                onChange={(e) =>
+                  setCustomer((pre) => ({
+                    ...pre,
+                    note: e.target.value,
                   }))
                 }
               />
