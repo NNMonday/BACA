@@ -11,6 +11,13 @@ import Modal from "react-bootstrap/Modal";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faCartShopping,
+  faMinus,
+  faPlus,
+  faX,
+} from "@fortawesome/free-solid-svg-icons";
 
 export default function Cart() {
   const [loading, setLoading] = useState(true);
@@ -131,7 +138,7 @@ export default function Cart() {
     <>
       <MainLayout>
         <h2 className="text-baca pt-5 ps-5">
-          <i className="fa-solid fa-cart-shopping fs-3 me-3"></i>
+          <FontAwesomeIcon icon={faCartShopping} />
           <span>Giỏ Hàng</span>
         </h2>
         <div className="d-flex justify-content-center mt-3">
@@ -173,32 +180,32 @@ export default function Cart() {
                     </td>
                     <td className="position-relative">
                       <div
-                        className="mt-2 me-2 position-absolute bg-transparent d-flex"
+                        className="mt-2 me-2 position-absolute bg-transparent d-flex cursor-pointer"
                         style={{ top: "0", right: "0" }}
                       >
-                        <i
-                          className="fa-solid fa-x"
+                        <FontAwesomeIcon
+                          icon={faX}
                           onClick={() => handleDelete(index)}
-                        ></i>
+                        />
                       </div>
                       <div
                         className="mb-2 me-2 position-absolute bg-transparent d-flex"
                         style={{ bottom: "0", right: "0" }}
                       >
-                        <div className="bg-white d-flex justify-content-center align-items-center p-1 rounded-circle border-baca">
-                          <i
-                            className="fa-solid fa-minus"
+                        <div className="bg-white d-flex justify-content-center align-items-center p-1 rounded-circle border-baca cursor-pointer">
+                          <FontAwesomeIcon
+                            icon={faMinus}
                             onClick={() => decreaseQuantity(index)}
-                          ></i>
+                          />
                         </div>
                         <span className="mx-2">
                           {i.quantity} {i.unit}
                         </span>
-                        <div className="bg-baca d-flex justify-content-center align-items-center p-1 rounded-circle">
-                          <i
-                            className="fa-solid fa-plus"
+                        <div className="bg-baca d-flex justify-content-center align-items-center p-1 rounded-circle cursor-pointer">
+                          <FontAwesomeIcon
+                            icon={faPlus}
                             onClick={() => increaseQuantity(index)}
-                          ></i>
+                          />
                         </div>
                       </div>
                       <div className="me-4">

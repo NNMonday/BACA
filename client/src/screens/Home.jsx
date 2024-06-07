@@ -17,6 +17,12 @@ import debounce from "lodash.debounce";
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 import toast from "react-hot-toast";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faCartShopping,
+  faMagnifyingGlass,
+  faSliders,
+} from "@fortawesome/free-solid-svg-icons";
 
 export default function Home() {
   const [loading, setLoading] = useState(true);
@@ -37,10 +43,7 @@ export default function Home() {
           process.env.REACT_APP_BACKEND_URL + "/api/category"
         );
         const resItems = await axios.post(
-          process.env.REACT_APP_BACKEND_URL + "/api/items",
-          {
-            categories: [],
-          }
+          process.env.REACT_APP_BACKEND_URL + "/api/items"
         );
 
         setItems(resItems.data.data);
@@ -50,11 +53,6 @@ export default function Home() {
         console.log(error);
       }
     })();
-  }, []);
-
-  const updateCart = useCallback((newCart) => {
-    setCart(newCart);
-    localStorage.setItem("cart", JSON.stringify(newCart));
   }, []);
 
   const addItem = useCallback(
@@ -75,9 +73,10 @@ export default function Home() {
           className: "bg-success text-white text-center",
         });
       }
-      updateCart(newCart);
+      setCart(newCart);
+      localStorage.setItem("cart", JSON.stringify(newCart));
     },
-    [cart, updateCart]
+    [cart]
   );
 
   const [search, setSearch] = useState("");
@@ -144,7 +143,7 @@ export default function Home() {
               className="p-3 d-flex align-items-center flex-grow-1 border border-dark-subtle overflow-hidden"
               style={{ borderRadius: "10px" }}
             >
-              <i className="fa-solid fa-magnifying-glass me-2"></i>
+              <FontAwesomeIcon icon={faMagnifyingGlass} className="me-2" />
               <input
                 value={search}
                 onChange={handleSearchChange}
@@ -157,7 +156,10 @@ export default function Home() {
               style={{ aspectRatio: "1/1" }}
               onClick={handleShow}
             >
-              <i className="fa-solid fa-sliders text-baca filter-icon"></i>
+              <FontAwesomeIcon
+                icon={faSliders}
+                className="text-baca filter-icon"
+              />
             </Button>
           </div>
 
@@ -184,7 +186,10 @@ export default function Home() {
                         className="bg-transparent border-0 p-0"
                         onClick={() => addItem(item)}
                       >
-                        <i className="fa-solid fa-cart-shopping text-baca fs-4"></i>
+                        <FontAwesomeIcon
+                          icon={faCartShopping}
+                          className="text-baca fs-4"
+                        />
                       </Button>
                       <span className="text-baca fw-bold">
                         {numberWithDots(item.price)}đ/{item.unit}
