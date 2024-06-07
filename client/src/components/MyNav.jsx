@@ -19,11 +19,11 @@ export default function MyNav() {
     >
       <Navbar.Brand>
         <Link to={"/"} className="d-inline-block">
-          <img src={logo} alt="Logo" width={60} />
+          <img src={logo} alt="Logo" width={60} loading="lazy" />
         </Link>
       </Navbar.Brand>
-      <div>
-        <Link to={"/cart"} className="me-4 my-3 position-relative d-md-none">
+      <div className="d-md-none">
+        <Link to={"/cart"} className="me-4 my-3 position-relative">
           <FontAwesomeIcon icon={faCartShopping} className="text-baca fs-4" />
           <Badge
             bg="white"
@@ -54,7 +54,7 @@ export default function MyNav() {
             to={"/cart"}
             className="me-4 my-3 position-relative d-none d-md-inline"
           >
-            <i className="fa-solid fa-cart-shopping text-baca fs-4"></i>
+            <FontAwesomeIcon icon={faCartShopping} className="text-baca fs-4" />
             <Badge
               bg="white"
               className="border border-black position-absolute translate-middle"

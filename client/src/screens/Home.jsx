@@ -37,7 +37,7 @@ export default function Home() {
   const [counter, setCounter] = useState(0);
   useEffect(() => {
     const counterInterval = setInterval(() => {
-      setCounter((prevCounter) => prevCounter + 1); // Update counter every second
+      setCounter((prevCounter) => prevCounter + 1);
     }, 1000);
     (async () => {
       try {
@@ -61,8 +61,9 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    if (!loading) {
+    if (!loading && counter !== 0) {
       console.log("Final Counter:", counter);
+      setCounter(0);
     }
   }, [loading, counter]);
 
@@ -140,6 +141,7 @@ export default function Home() {
           <Col>
             <Link to={"/about"} className="d-block">
               <img
+                loading="lazy"
                 src={thumbnail}
                 className="w-100 object-fit-cover"
                 alt="thumbnail"
