@@ -34,8 +34,11 @@ export default function Home() {
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
-
+  const [counter, setCounter] = useState(0);
   useEffect(() => {
+    const counterInterval = setInterval(() => {
+      setCounter((prevCounter) => prevCounter + 1); // Update counter every second
+    }, 1000);
     (async () => {
       try {
         setLoading(true);
@@ -49,11 +52,19 @@ export default function Home() {
         setItems(resItems.data.data);
         setCategories(resCategories.data.data);
         setLoading(false);
+        clearInterval(counterInterval);
       } catch (error) {
         console.log(error);
       }
     })();
+    return () => clearInterval(counterInterval);
   }, []);
+
+  useEffect(() => {
+    if (!loading) {
+      console.log("Final Counter:", counter);
+    }
+  }, [loading, counter]);
 
   const addItem = useCallback(
     (item) => {
@@ -164,7 +175,10 @@ export default function Home() {
           </div>
 
           {loading ? (
-            <h1>Loading...</h1>
+            <div>
+              <h1>Loading...</h1>
+              <p>Time Elapsed: {counter} seconds</p>
+            </div>
           ) : (
             items.map((item, i) => (
               <Col key={i} lg={3} md={4} xs={6} className="baca-item mb-2">
