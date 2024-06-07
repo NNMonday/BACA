@@ -142,7 +142,7 @@ export default function Home() {
             <Link to={"/about"} className="d-block">
               <img
                 src={thumbnail}
-                className="w-100 object-fit-cover"
+                className="w-100 h-100 object-fit-cover"
                 alt="thumbnail"
               />
             </Link>
