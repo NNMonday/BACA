@@ -167,6 +167,7 @@ export default function Home() {
               className="ms-2 bg-transparent border-baca filter-btn"
               style={{ aspectRatio: "1/1" }}
               onClick={handleShow}
+              aria-label="Filter"
             >
               <FontAwesomeIcon
                 icon={faSliders}
@@ -201,6 +202,7 @@ export default function Home() {
                       <Button
                         className="bg-transparent border-0 p-0"
                         onClick={() => addItem(item)}
+                        aria-label="Add item to cart"
                       >
                         <FontAwesomeIcon
                           icon={faCartShopping}
@@ -220,27 +222,30 @@ export default function Home() {
       </MainLayout>
       <Modal show={show} onHide={handleClose} centered>
         <Modal.Header closeButton>
-          <Modal.Title>Menu Filter</Modal.Title>
+          <Modal.Title>Bộ lọc menu</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form>
-            {categories.map((c) => (
-              <Form.Check
-                key={c._id}
-                label={c.name}
-                type="checkbox"
-                value={c._id}
-                checked={filter.categories.includes(c._id)}
-                onChange={() => {
-                  setFilter((pre) => ({
-                    ...pre,
-                    categories: pre.categories.includes(c._id)
-                      ? [...removeByValue(pre.categories, c._id)]
-                      : [...pushAndReturnCopy(filter.categories, c._id)],
-                  }));
-                }}
-              />
-            ))}
+            <Form.Group controlId="categories">
+              <Form.Label>Loại đồ ăn:</Form.Label>
+              {categories.map((c) => (
+                <Form.Check
+                  key={c._id}
+                  label={c.name}
+                  type="checkbox"
+                  value={c._id}
+                  checked={filter.categories.includes(c._id)}
+                  onChange={() => {
+                    setFilter((pre) => ({
+                      ...pre,
+                      categories: pre.categories.includes(c._id)
+                        ? [...removeByValue(pre.categories, c._id)]
+                        : [...pushAndReturnCopy(filter.categories, c._id)],
+                    }));
+                  }}
+                />
+              ))}
+            </Form.Group>
           </Form>
         </Modal.Body>
         <Modal.Footer>
