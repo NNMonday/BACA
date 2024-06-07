@@ -159,7 +159,7 @@ export default function Home() {
             >
               <FontAwesomeIcon icon={faMagnifyingGlass} className="me-2" />
               <Form>
-                <Form.Group>
+                <Form.Group controlId="search">
                   <Form.Label className="d-none">Search</Form.Label>
                   <input
                     value={search}
