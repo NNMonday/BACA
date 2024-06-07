@@ -4,6 +4,8 @@ import Navbar from "react-bootstrap/Navbar";
 import { Link, NavLink } from "react-router-dom";
 import { Badge } from "react-bootstrap"; // Import Badge component
 import logo from "../assets/logo.png";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCartShopping } from "@fortawesome/free-solid-svg-icons";
 
 export default function MyNav() {
   // Example cart item count, replace this with your actual cart item count
@@ -22,7 +24,7 @@ export default function MyNav() {
       </Navbar.Brand>
       <div>
         <Link to={"/cart"} className="me-4 my-3 position-relative d-md-none">
-          <i className="fa-solid fa-cart-shopping text-baca fs-4"></i>
+          <FontAwesomeIcon icon={faCartShopping} className="text-baca fs-4" />
           <Badge
             bg="white"
             className="border border-black position-absolute translate-middle"
