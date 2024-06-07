@@ -144,6 +144,8 @@ export default function Home() {
                 src={thumbnail}
                 className="w-100 h-100 object-fit-cover"
                 alt="thumbnail"
+                width={878}
+                height={325}
               />
             </Link>
           </Col>
@@ -156,12 +158,17 @@ export default function Home() {
               style={{ borderRadius: "10px" }}
             >
               <FontAwesomeIcon icon={faMagnifyingGlass} className="me-2" />
-              <input
-                value={search}
-                onChange={handleSearchChange}
-                type="text"
-                className="border-0 d-inline w-auto custom-input h-100 flex-grow-1"
-              />
+              <Form>
+                <Form.Group>
+                  <Form.Label className="d-none">Search</Form.Label>
+                  <input
+                    value={search}
+                    onChange={handleSearchChange}
+                    type="text"
+                    className="border-0 d-inline w-auto custom-input h-100 flex-grow-1"
+                  />
+                </Form.Group>
+              </Form>
             </div>
             <Button
               className="ms-2 bg-transparent border-baca filter-btn"
