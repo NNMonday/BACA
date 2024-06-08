@@ -1,38 +1,49 @@
-import { FaFacebook, FaPhone } from "react-icons/fa";
-import logo from "../assets/logo.png";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import React from "react";
+import { faFacebook, faTiktok } from "@fortawesome/free-brands-svg-icons";
+import { Link } from "react-router-dom";
+
 export default function Footer() {
   return (
     <div
-      className="w-100"
-      style={{
-        backgroundColor: "rgb(220, 194, 149)",
-        minHeight: "100px",
-        padding: "20px 0",
-        color: "white",
-      }}
+      className="w-100 p-3 p-md-5 w-100 d-flex justify-content-md-between flex-column flex-md-row"
+      style={{ backgroundColor: "#fff7eb" }}
     >
-      <h4 className="text-center fw-normal fs-5 mb-0">Maneki-Chan</h4>
-      <div className="d-flex justify-content-center">
+      <div className="d-flex footer-logo">
         <img
-          src={logo}
-          style={{ width: "3em", height: "auto", margin: "0 auto" }}
+          src="https://raw.githubusercontent.com/NNMonday/Maneki-chan-content/main/og-preview.png"
+          className="w-100"
+          style={{ maxWidth: "200px", minWidth: "100px" }}
         />
+        <div className="d-flex align-items-center">
+          <span className="text-secondary">
+            "Maneki-chan – Mang Hương Vị Nhật Bản Đến Gần Bạn"
+          </span>
+        </div>
       </div>
-      <div className="d-flex justify-content-center">
-        <span className="d-flex align-items-center">
-          <FaFacebook size={20} />
-          <a
-            href="https://www.facebook.com/profile.php?id=61560746542491"
-            className="ms-2 me-5"
-            style={{ color: "white" }}
-          >
-            Maneki-chan
-          </a>
-        </span>
-        <span className="d-flex align-items-center">
-          <FaPhone size={20} className="me-2" />
-          0253937094
-        </span>
+      <div className="d-flex">
+        <div className="d-flex flex-column justify-content-around my-3 me-5">
+          <div>
+            <strong>Liên lạc</strong>
+          </div>
+          <div>
+            <span className="text-secondary">SĐT: 0334408599</span>
+          </div>
+        </div>
+        <div className="d-flex flex-column justify-content-around my-3 ">
+          <div>
+            <strong>Theo dõi chúng tôi</strong>
+          </div>
+          <div className="d-flex">
+            <a
+              href="https://www.facebook.com/profile.php?id=61560746542491"
+              target="_blank"
+            >
+              <FontAwesomeIcon icon={faFacebook} size="2x" />
+            </a>
+            <FontAwesomeIcon icon={faTiktok} size="2x" className="ms-3" />
+          </div>
+        </div>
       </div>
     </div>
   );
