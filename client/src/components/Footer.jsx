@@ -1,8 +1,7 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import { faFacebook, faTiktok } from "@fortawesome/free-brands-svg-icons";
-import { Link } from "react-router-dom";
-
+import { FaPhoneAlt } from "react-icons/fa";
 export default function Footer() {
   return (
     <div
@@ -22,12 +21,13 @@ export default function Footer() {
         </div>
       </div>
       <div className="d-flex">
-        <div className="d-flex flex-column justify-content-around my-3 me-5">
+        <div className="d-flex flex-column justify-content-around my-3 me-5 ms-4">
           <div>
             <strong>Liên lạc</strong>
           </div>
           <div>
-            <span className="text-secondary">SĐT: 0334408599</span>
+            <FaPhoneAlt style={{ color: "rgb(127, 123, 117)" }} />
+            <span className="ms-2 text-secondary">0334408599</span>
           </div>
         </div>
         <div className="d-flex flex-column justify-content-around my-3 ">
