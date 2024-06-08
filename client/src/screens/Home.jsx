@@ -22,6 +22,8 @@ import {
   faCartShopping,
   faMagnifyingGlass,
   faSliders,
+  faPlus,
+  faMinus,
 } from "@fortawesome/free-solid-svg-icons";
 
 export default function Home() {
@@ -31,6 +33,8 @@ export default function Home() {
     JSON.parse(localStorage.getItem("cart")) || []
   );
   const [categories, setCategories] = useState([]);
+  const [selectedItem, setSelectedItem] = useState(null);
+  const [showModal, setShowModal] = useState(false);
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -60,6 +64,15 @@ export default function Home() {
     return () => clearInterval(counterInterval);
   }, []);
 
+  const updateCart = useCallback((newCart) => {
+    setCart(newCart);
+    localStorage.setItem("cart", JSON.stringify(newCart));
+  }, []);
+  const handleCartClick = (item) => {
+    const temp = { data: item, quantity: 1 };
+    setSelectedItem(temp);
+    setShowModal(true);
+  };
   useEffect(() => {
     if (!loading && counter !== 0) {
       console.log("Final Counter:", counter);
@@ -68,25 +81,24 @@ export default function Home() {
   }, [loading, counter]);
 
   const addItem = useCallback(
-    (item) => {
+    (item, quantity) => {
+      console.log(selectedItem);
       const existIdIndex = cart.findIndex((i) => i._id === item._id);
       const newCart = [...cart];
       if (existIdIndex > -1) {
         newCart[existIdIndex] = {
           _id: item._id,
-          quantity: newCart[existIdIndex].quantity + 1,
+          quantity: newCart[existIdIndex].quantity + quantity,
         };
         toast(`+1 ${item.name}`, {
           className: "bg-success text-white text-center",
         });
       } else {
-        newCart.push({ _id: item._id, quantity: 1 });
-        toast(`Đã thêm ${item.name} vào giỏ hàng`, {
-          className: "bg-success text-white text-center",
-        });
+        newCart.push({ _id: item._id, quantity: quantity });
+        updateCart(newCart);
       }
-      setCart(newCart);
-      localStorage.setItem("cart", JSON.stringify(newCart));
+      setShowModal(false);
+      toast.success("Đã thêm vào giỏ hàng");
     },
     [cart]
   );
@@ -189,12 +201,41 @@ export default function Home() {
               <p>Time Elapsed: {counter} seconds</p>
             </div>
           ) : (
+            // items.map((item, i) => (
+            //   <Col key={i} lg={3} md={4} xs={6} className="baca-item mb-2">
+            //     <Card border="0" className="h-100">
+            //       <div className="item-img-container">
+            //         <Card.Img
+            //           loading="lazy"
+            //           className="w-100 h-100"
+            //           style={{ objectFit: "cover", objectPosition: "center" }}
+            //           variant="top"
+            //           src={item.image}
+            //           alt={item.name}
+            //         />
+            //       </div>
+            //       <Card.Body className="d-flex flex-column justify-content-between">
+            //         <Card.Title>{capitalizeString(item.name)}</Card.Title>
+            //         <Card.Text>{item.description}</Card.Text>
+            //         <div className="d-flex justify-content-between">
+            //           <Button
+            //             className="bg-transparent border-0 p-0"
+            //             onClick={() => addItem(item)}
+            //             aria-label="Add item to cart"
+            //           >
+            //             <FontAwesomeIcon
+            //               icon={faCartShopping}
+            //               className="text-baca fs-4"
+            //             />
+            //           </Button>
+            //           <span className="text-baca fw-bold">
+            //             {numberWithDots(item.price)}đ/{item.unit}
+            //           </span>
             items.map((item, i) => (
               <Col key={i} lg={3} md={4} xs={6} className="baca-item mb-2">
                 <Card border="0" className="h-100">
                   <div className="item-img-container">
                     <Card.Img
-                      loading="lazy"
                       className="w-100 h-100"
                       style={{ objectFit: "cover", objectPosition: "center" }}
                       variant="top"
@@ -208,8 +249,7 @@ export default function Home() {
                     <div className="d-flex justify-content-between">
                       <Button
                         className="bg-transparent border-0 p-0"
-                        onClick={() => addItem(item)}
-                        aria-label="Add item to cart"
+                        onClick={() => handleCartClick(item)}
                       >
                         <FontAwesomeIcon
                           icon={faCartShopping}
@@ -264,6 +304,83 @@ export default function Home() {
             onClick={() => fetchSearch(search)}
           >
             Save Changes
+          </Button>
+        </Modal.Footer>
+      </Modal>
+      <Modal
+        show={showModal}
+        onHide={(e) => {
+          setShowModal(false);
+        }}
+        centered
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Thêm vào giỏ hàng</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <div className="d-flex justify-content-between align-items-center">
+            <div className="bg-bg-black col-6 d-flex align-items-center">
+              <img
+                src={selectedItem?.data.image}
+                className="w-25 object-fit-cover rounded-2 shadow-lg me-2"
+                style={{ aspectRatio: "1/1", objectPosition: "center" }}
+              />
+              <div>
+                <h4 className="fs-6 fw-normal mb-0">
+                  {selectedItem?.data.name}
+                </h4>
+                <p className="fs-6 mb-0" style={{ color: "#717171" }}>
+                  {selectedItem
+                    ? numberWithDots(selectedItem?.data.price)
+                    : "0"}{" "}
+                  đ/ {selectedItem?.data.unit}
+                </p>
+              </div>
+            </div>
+            <div
+              className="col-6 d-flex"
+              style={{ justifyContent: "end", alignItems: "center" }}
+            >
+              <FontAwesomeIcon
+                className="fa fa-solid fa-plus rounded-1"
+                icon={faPlus}
+                style={{ backgroundColor: "#dcc295", padding: "4px" }}
+                onClick={(e) => {
+                  const updatedItem = {
+                    ...selectedItem,
+                    quantity: selectedItem.quantity + 1,
+                  };
+                  setSelectedItem(updatedItem);
+                }}
+              />
+              <input
+                className="w-25 mx-2 rounded-1"
+                type="number"
+                value={selectedItem?.quantity}
+              />
+              <FontAwesomeIcon
+                icon={faMinus}
+                className="fa fa-solid fa-minus rounded-1"
+                style={{ backgroundColor: "#dcc295", padding: "4px" }}
+                onClick={(e) => {
+                  const updatedItem = {
+                    ...selectedItem,
+                    quantity: selectedItem.quantity - 1,
+                  };
+                  setSelectedItem(updatedItem);
+                }}
+              />
+            </div>
+          </div>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button
+            className="bg-baca border-0"
+            onClick={(e) => {
+              addItem(selectedItem.data, selectedItem.quantity);
+            }}
+          >
+            Thêm vào giỏ hàng
           </Button>
         </Modal.Footer>
       </Modal>
