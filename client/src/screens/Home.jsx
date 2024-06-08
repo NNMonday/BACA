@@ -24,7 +24,8 @@ export default function Home() {
     JSON.parse(localStorage.getItem("cart")) || []
   );
   const [categories, setCategories] = useState([]);
-
+  const [selectedItem, setSelectedItem] = useState(null);
+  const [showModal, setShowModal] = useState(false);
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -54,22 +55,29 @@ export default function Home() {
     setCart(newCart);
     localStorage.setItem("cart", JSON.stringify(newCart));
   }, []);
+  const handleCartClick = (item) => {
+    const temp = { data: item, quantity: 1 };
+    setSelectedItem(temp);
+    setShowModal(true);
+  };
 
   const addItem = useCallback(
-    (item) => {
+    (item, quantity) => {
+      console.log(selectedItem);
       const existIdIndex = cart.findIndex((i) => i._id === item._id);
       const newCart = [...cart];
       if (existIdIndex > -1) {
         newCart[existIdIndex] = {
           _id: item._id,
-          quantity: newCart[existIdIndex].quantity + 1,
+          quantity: newCart[existIdIndex].quantity + quantity,
         };
         updateCart(newCart);
       } else {
-        newCart.push({ _id: item._id, quantity: 1 });
+        newCart.push({ _id: item._id, quantity: quantity });
         updateCart(newCart);
       }
-      toast("Đã thêm vào giỏ hàng", { className: "bg-success text-white" });
+      setShowModal(false);
+      toast.success("Đã thêm vào giỏ hàng");
     },
     [cart, updateCart]
   );
@@ -169,7 +177,7 @@ export default function Home() {
                 <div className="item-img-container">
                   <Card.Img
                     className="w-100 h-100"
-                    // style={{ objectFit: "cover", objectPosition: "center" }}
+                    style={{ objectFit: "cover", objectPosition: "center" }}
                     variant="top"
                     src={item.image}
                     alt={item.name}
@@ -181,7 +189,7 @@ export default function Home() {
                   <div className="d-flex justify-content-between">
                     <Button
                       className="bg-transparent border-0 p-0"
-                      onClick={() => addItem(item)}
+                      onClick={() => handleCartClick(item)}
                     >
                       <i className="fa-solid fa-cart-shopping text-baca fs-4"></i>
                     </Button>
@@ -225,6 +233,78 @@ export default function Home() {
             Close
           </Button>
           <Button className="bg-baca border-0" onClick={handleFilter}>
+            Save Changes
+          </Button>
+        </Modal.Footer>
+      </Modal>
+      <Modal
+        show={showModal}
+        onHide={(e) => {
+          setShowModal(false);
+        }}
+        centered
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Thêm vào giỏ hàng</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <div className="d-flex justify-content-between align-items-center">
+            <div className="bg-bg-black col-6 d-flex align-items-center">
+              <img
+                src={selectedItem?.data.image}
+                className="w-25 object-fit-cover rounded-2 shadow-lg me-2"
+                style={{ aspectRatio: "1/1", objectPosition: "center" }}
+              />
+              <div>
+                <h4 className="fs-6 fw-normal mb-0">
+                  {selectedItem?.data.name}
+                </h4>
+                <p className="fs-6 mb-0" style={{ color: "#717171" }}>
+                  {selectedItem
+                    ? numberWithDots(selectedItem?.data.price)
+                    : "0"}{" "}
+                  đ/ {selectedItem?.data.unit}
+                </p>
+              </div>
+            </div>
+            <div
+              className="col-6 d-flex"
+              style={{ justifyContent: "end", alignItems: "center" }}
+            >
+              <i
+                className="fa fa-solid fa-plus rounded-1"
+                style={{ backgroundColor: "#dcc295", padding: "4px" }}
+                onClick={(e)=>{
+                  const updatedItem = {...selectedItem, quantity: selectedItem.quantity+1}
+                  setSelectedItem(updatedItem)
+                }}
+              ></i>
+              <input
+                className="w-25 mx-2 rounded-1"
+                type="number"
+                value={selectedItem?.quantity}
+              />
+              <i
+                className="fa fa-solid fa-minus rounded-1"
+                style={{ backgroundColor: "#dcc295", padding: "4px" }}
+                onClick={(e)=>{
+                  const updatedItem = {...selectedItem, quantity: selectedItem.quantity-1}
+                  setSelectedItem(updatedItem)
+                }}
+              ></i>
+            </div>
+          </div>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            Close
+          </Button>
+          <Button
+            className="bg-baca border-0"
+            onClick={(e) => {
+              addItem(selectedItem.data, selectedItem.quantity);
+            }}
+          >
             Save Changes
           </Button>
         </Modal.Footer>
