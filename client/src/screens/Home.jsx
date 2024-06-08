@@ -100,7 +100,7 @@ export default function Home() {
       setShowModal(false);
       toast.success("Đã thêm vào giỏ hàng");
     },
-    [cart]
+    [cart, selectedItem, updateCart]
   );
 
   const [search, setSearch] = useState("");
@@ -109,7 +109,6 @@ export default function Home() {
   });
   const fetchSearch = useCallback(
     async (search) => {
-      console.log(search);
       try {
         setLoading(true);
         const res = await axios.post(
@@ -201,36 +200,6 @@ export default function Home() {
               <p>Time Elapsed: {counter} seconds</p>
             </div>
           ) : (
-            // items.map((item, i) => (
-            //   <Col key={i} lg={3} md={4} xs={6} className="baca-item mb-2">
-            //     <Card border="0" className="h-100">
-            //       <div className="item-img-container">
-            //         <Card.Img
-            //           loading="lazy"
-            //           className="w-100 h-100"
-            //           style={{ objectFit: "cover", objectPosition: "center" }}
-            //           variant="top"
-            //           src={item.image}
-            //           alt={item.name}
-            //         />
-            //       </div>
-            //       <Card.Body className="d-flex flex-column justify-content-between">
-            //         <Card.Title>{capitalizeString(item.name)}</Card.Title>
-            //         <Card.Text>{item.description}</Card.Text>
-            //         <div className="d-flex justify-content-between">
-            //           <Button
-            //             className="bg-transparent border-0 p-0"
-            //             onClick={() => addItem(item)}
-            //             aria-label="Add item to cart"
-            //           >
-            //             <FontAwesomeIcon
-            //               icon={faCartShopping}
-            //               className="text-baca fs-4"
-            //             />
-            //           </Button>
-            //           <span className="text-baca fw-bold">
-            //             {numberWithDots(item.price)}đ/{item.unit}
-            //           </span>
             items.map((item, i) => (
               <Col key={i} lg={3} md={4} xs={6} className="baca-item mb-2">
                 <Card border="0" className="h-100">
@@ -324,6 +293,7 @@ export default function Home() {
                 src={selectedItem?.data.image}
                 className="w-25 object-fit-cover rounded-2 shadow-lg me-2"
                 style={{ aspectRatio: "1/1", objectPosition: "center" }}
+                alt="Item"
               />
               <div>
                 <h4 className="fs-6 fw-normal mb-0">
@@ -357,6 +327,21 @@ export default function Home() {
                 className="w-25 mx-2 rounded-1"
                 type="number"
                 value={selectedItem?.quantity}
+                onChange={(e) => {
+                  const quantity = Number(e.target.value);
+                  if (
+                    typeof quantity === "number" &&
+                    quantity > 0 &&
+                    Number.isInteger(quantity)
+                  ) {
+                    setSelectedItem((pre) => ({
+                      ...pre,
+                      quantity: e.target.value,
+                    }));
+                  } else {
+                    toast.error("Chỉ chấp nhận số lớn hơn 0");
+                  }
+                }}
               />
               <FontAwesomeIcon
                 icon={faMinus}

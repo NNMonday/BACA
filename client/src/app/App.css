@@ -68,3 +68,9 @@ body {
 .jiggle {
   animation: jiggle 0.5s infinite;
 }
+
+@media (min-width: 767.98px) {
+  .footer-logo {
+    max-width: 50%;
+  }
+}
