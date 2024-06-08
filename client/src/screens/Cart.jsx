@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import MainLayout from "../layouts/MainLayout";
 import Table from "react-bootstrap/Table";
 import { Button, Form } from "react-bootstrap";
@@ -11,14 +11,24 @@ import Modal from "react-bootstrap/Modal";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faCartShopping,
+  faMinus,
+  faPlus,
+  faX,
+} from "@fortawesome/free-solid-svg-icons";
 
 export default function Cart() {
+  const [loading, setLoading] = useState(true);
   const [cart, setCart] = useState([]);
   const [customer, setCustomer] = useState({
     phoneNumber: "",
     address: "",
     receiver: "",
+    note: "",
   });
+
   useEffect(() => {
     (async () => {
       const savedCart = JSON.parse(localStorage.getItem("cart")) || [];
@@ -40,13 +50,15 @@ export default function Cart() {
           return { ...item, quantity };
         })
       );
+      setLoading(false);
     })();
   }, []);
 
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
-  const saveToLocal = (cart) => {
+
+  const saveToLocal = useCallback((cart) => {
     setCart(cart);
     localStorage.setItem(
       "cart",
@@ -54,142 +66,174 @@ export default function Cart() {
         cart.map((item) => ({ _id: item._id, quantity: item.quantity }))
       )
     );
-  };
+  }, []);
 
-  const handleDelete = (index) => {
-    if (window.confirm(`Do you want to delete ${cart[index].name}`)) {
-      const copiedCart = [...cart];
-      copiedCart.splice(index, 1);
-      saveToLocal(copiedCart);
-    } else return;
-  };
+  const handleDelete = useCallback(
+    (index) => {
+      if (window.confirm(`Do you want to delete ${cart[index].name}`)) {
+        const copiedCart = [...cart];
+        copiedCart.splice(index, 1);
+        saveToLocal(copiedCart);
+      } else return;
+    },
+    [cart, saveToLocal]
+  );
 
-  const increaseQuantity = (index) => {
-    const copiedCart = [...cart];
-    copiedCart[index] = {
-      ...copiedCart[index],
-      quantity: copiedCart[index].quantity + 1,
-    };
-    saveToLocal(copiedCart);
-  };
-
-  const decreaseQuantity = (index) => {
-    if (cart[index].quantity === 1) {
-      handleDelete(index);
-    } else {
+  const increaseQuantity = useCallback(
+    (index) => {
       const copiedCart = [...cart];
       copiedCart[index] = {
         ...copiedCart[index],
-        quantity: copiedCart[index].quantity - 1,
+        quantity: copiedCart[index].quantity + 1,
       };
       saveToLocal(copiedCart);
-    }
-  };
+    },
+    [cart, saveToLocal]
+  );
+
+  const decreaseQuantity = useCallback(
+    (index) => {
+      if (cart[index].quantity === 1) {
+        handleDelete(index);
+      } else {
+        const copiedCart = [...cart];
+        copiedCart[index] = {
+          ...copiedCart[index],
+          quantity: copiedCart[index].quantity - 1,
+        };
+        saveToLocal(copiedCart);
+      }
+    },
+    [cart, handleDelete, saveToLocal]
+  );
 
   const navigate = useNavigate();
-  const handleSumbit = async (e) => {
-    e.preventDefault();
-
-    try {
-      for (const key in customer) {
-        if (customer[key].trim() === "") {
-          throw Error("Vui lòng nhập đủ thông tin người nhận");
+  const handleSumbit = useCallback(
+    async (e) => {
+      e.preventDefault();
+      try {
+        for (const key in customer) {
+          if (customer[key].trim() === "") {
+            throw Error("Vui lòng nhập đủ thông tin người nhận");
+          }
         }
-      }
 
-      if (!validatePhoneNumber(customer.phoneNumber)) {
-        throw Error("Số điện thoại sai định dạng");
-      }
-
-      const res = await axios.post(
-        process.env.REACT_APP_BACKEND_URL + "/api/order",
-        {
-          phoneNumber: customer.phoneNumber,
-          address: customer.address,
-          items: cart.map((item) => ({
-            item: item._id,
-            amount: item.quantity,
-          })),
-          receiver: customer.receiver,
+        if (!validatePhoneNumber(customer.phoneNumber)) {
+          throw Error("Số điện thoại sai định dạng");
         }
-      );
-      toast(res.data.message, {
-        className: "bg-success text-white",
-      });
-      localStorage.setItem("cart", "[]");
-      navigate("/");
-    } catch (error) {
-      toast(error.message, {
-        className: "bg-danger text-white",
-      });
-    }
-  };
+
+        const res = await axios.post(
+          process.env.REACT_APP_BACKEND_URL + "/api/order",
+          {
+            phoneNumber: customer.phoneNumber,
+            address: customer.address,
+            items: cart.map((item) => ({
+              item: item._id,
+              amount: item.quantity,
+            })),
+            receiver: customer.receiver,
+          }
+        );
+        toast(res.data.message, {
+          className: "bg-success text-white",
+        });
+        localStorage.setItem("cart", "[]");
+        navigate("/");
+      } catch (error) {
+        toast(error.message, {
+          className: "bg-danger text-white",
+        });
+      }
+    },
+    [cart, customer, navigate]
+  );
 
   return (
     <>
       <MainLayout>
         <h2 className="text-baca pt-5 ps-5">
-          <i className="fa-solid fa-cart-shopping fs-3 me-3"></i>
+          <FontAwesomeIcon icon={faCartShopping} />
           <span>Giỏ Hàng</span>
         </h2>
         <div className="d-flex justify-content-center mt-3">
-          <Table bordered className="w-75 cart-table overflow-hidden" hover>
+          <Table
+            bordered
+            className="w-75 cart-table overflow-hidden"
+            hover
+            style={{ minWidth: "300px" }}
+          >
             <tbody>
-              {cart.map((i, index) => (
-                <tr
-                  key={i._id}
-                  className="cart-item"
-                  style={{ position: "relative" }}
-                >
+              {loading ? (
+                <tr>
                   <td>
-                    <div
-                      className="item-img-container d-inline-block border-black me-2"
-                      style={{ width: "80px" }}
-                    >
-                      <img src={i.image} alt={i.name} className="h-100 w-100" />
-                    </div>
-                  </td>
-                  <td className="position-relative">
-                    <div
-                      className="mt-2 me-2 position-absolute bg-transparent d-flex"
-                      style={{ top: "0", right: "0" }}
-                    >
-                      <i
-                        className="fa-solid fa-x"
-                        onClick={() => handleDelete(index)}
-                      ></i>
-                    </div>
-                    <div
-                      className="mb-2 me-2 position-absolute bg-transparent d-flex"
-                      style={{ bottom: "0", right: "0" }}
-                    >
-                      <div className="bg-white d-flex justify-content-center align-items-center p-1 rounded-circle border-baca">
-                        <i
-                          className="fa-solid fa-minus"
-                          onClick={() => decreaseQuantity(index)}
-                        ></i>
-                      </div>
-                      <span className="mx-2">
-                        {i.quantity} {i.unit}
-                      </span>
-                      <div className="bg-baca d-flex justify-content-center align-items-center p-1 rounded-circle">
-                        <i
-                          className="fa-solid fa-plus"
-                          onClick={() => increaseQuantity(index)}
-                        ></i>
-                      </div>
-                    </div>
-                    <div className="me-4">
-                      <strong>{i.name}</strong>
-                    </div>
-                    <div className="mt-2">
-                      <strong className="text-danger">
-                        {numberWithDots(i.price * i.quantity)}đ
-                      </strong>
-                    </div>
+                    <h1>Loading</h1>
                   </td>
                 </tr>
-              ))}
+              ) : (
+                cart.map((i, index) => (
+                  <tr
+                    key={i._id}
+                    className="cart-item"
+                    style={{ position: "relative" }}
+                  >
+                    <td>
+                      <div
+                        className="item-img-container d-inline-block border-black me-2"
+                        style={{ width: "80px" }}
+                      >
+                        <img
+                          src={i.image}
+                          alt={i.name}
+                          className="h-100 w-100"
+                          style={{
+                            objectFit: "cover",
+                            objectPosition: "center",
+                          }}
+                        />
+                      </div>
+                    </td>
+                    <td className="position-relative">
+                      <div
+                        className="mt-2 me-2 position-absolute bg-transparent d-flex cursor-pointer"
+                        style={{ top: "0", right: "0" }}
+                      >
+                        <FontAwesomeIcon
+                          icon={faX}
+                          onClick={() => handleDelete(index)}
+                        />
+                      </div>
+                      <div
+                        className="mb-2 me-2 position-absolute bg-transparent d-flex"
+                        style={{ bottom: "0", right: "0" }}
+                      >
+                        <div className="bg-white d-flex justify-content-center align-items-center p-1 rounded-circle border-baca cursor-pointer">
+                          <FontAwesomeIcon
+                            icon={faMinus}
+                            onClick={() => decreaseQuantity(index)}
+                          />
+                        </div>
+                        <span className="mx-2">
+                          {i.quantity} {i.unit}
+                        </span>
+                        <div className="bg-baca d-flex justify-content-center align-items-center p-1 rounded-circle cursor-pointer">
+                          <FontAwesomeIcon
+                            icon={faPlus}
+                            onClick={() => increaseQuantity(index)}
+                          />
+                        </div>
+                      </div>
+                      <div className="me-4">
+                        <strong>{i.name}</strong>
+                      </div>
+                      <div className="mt-2">
+                        <strong className="text-danger">
+                          {numberWithDots(i.price * i.quantity)}đ
+                        </strong>
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              )}
 
               <tr className="last-row">
                 <td
@@ -210,7 +254,7 @@ export default function Cart() {
                           cart.length === 0 ? navigate("/") : handleShow();
                         }}
                       >
-                        Thanh toán
+                        Đặt hàng
                       </span>
                     </Button>
                   </div>
@@ -264,6 +308,22 @@ export default function Cart() {
                   setCustomer((pre) => ({
                     ...pre,
                     receiver: e.target.value,
+                  }))
+                }
+              />
+            </Form.Group>
+            <Form.Group>
+              <Form.Label>Ghi chú</Form.Label>
+              <Form.Control
+                as="textarea"
+                rows={3}
+                required
+                type="text"
+                value={customer.note}
+                onChange={(e) =>
+                  setCustomer((pre) => ({
+                    ...pre,
+                    note: e.target.value,
                   }))
                 }
               />

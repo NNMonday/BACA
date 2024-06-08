@@ -45,6 +45,26 @@
 .filter-btn:focus .filter-icon {
   color: white !important;
 }
+
 body {
   overflow-x: hidden;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+/* Fallback.css */
+@keyframes jiggle {
+  0%,
+  100% {
+    transform: rotate(-3deg);
+  }
+  50% {
+    transform: rotate(3deg);
+  }
+}
+
+.jiggle {
+  animation: jiggle 0.5s infinite;
 }
