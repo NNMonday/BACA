@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Container from "react-bootstrap/Container";
 import MyNav from "../components/MyNav";
+import Footer from "../components/Footer";
 
 export default function MainLayout({ children }) {
   const [navbarHeight, setNavbarHeight] = useState(0);
@@ -12,6 +13,7 @@ export default function MainLayout({ children }) {
     <Container fluid className="p-0">
       <MyNav />
       <div style={{ marginTop: navbarHeight + "px" }}>{children}</div>
+      <Footer />
     </Container>
   );
 }

@@ -57,7 +57,14 @@ export default function Cart() {
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
-
+  const [orderPrice, setOrderPrice] = useState(0);
+  useEffect(() => {
+    let sum = calculateCartSum(cart);
+    if (sum >= 90000) {
+      sum -= 20000;
+    }
+    setOrderPrice(sum);
+  }, [cart]);
   const saveToLocal = useCallback((cart) => {
     setCart(cart);
     localStorage.setItem(
@@ -132,11 +139,11 @@ export default function Cart() {
               amount: item.quantity,
             })),
             receiver: customer.receiver,
+            total: orderPrice,
+            note: customer.note,
           }
         );
-        toast(res.data.message, {
-          className: "bg-success text-white",
-        });
+        toast.success(res.data.message);
         localStorage.setItem("cart", "[]");
         navigate("/");
       } catch (error) {
@@ -155,6 +162,9 @@ export default function Cart() {
           <FontAwesomeIcon icon={faCartShopping} />
           <span>Giỏ Hàng</span>
         </h2>
+        <h4 className="text-center fs-6" style={{ color: "red" }}>
+          Giảm 20k với đơn hàng trên 90k
+        </h4>
         <div className="d-flex justify-content-center mt-3">
           <Table
             bordered
@@ -241,11 +251,22 @@ export default function Cart() {
                   style={{ fontSize: "smaller", border: "1px solid black" }}
                 >
                   <div className="d-flex align-items-center justify-content-between">
-                    <span>
+                    <span className="d-flex">
                       Tổng tiền:
-                      <span className="text-danger fw-bold ms-1">
-                        {numberWithDots(calculateCartSum(cart))}đ
-                      </span>
+                      {calculateCartSum(cart) >= 90000 ? (
+                        <div>
+                          <span className="text-secondary text-decoration-line-through fw-bold ms-1">
+                            {numberWithDots(orderPrice + 20000)}đ
+                          </span>
+                          <span className="text-danger fw-bold ms-1">
+                            {numberWithDots(orderPrice)}đ
+                          </span>{" "}
+                        </div>
+                      ) : (
+                        <span className="text-danger fw-bold ms-1">
+                          {numberWithDots(orderPrice)}đ
+                        </span>
+                      )}
                     </span>
                     <Button size="sm" className="bg-baca border-0 me-lg-4 ms-2">
                       <span

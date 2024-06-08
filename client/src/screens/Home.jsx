@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import thumbnail from "../assets/thumbnail.png";
+import thumbnail from "../assets/thumbnail(1).png";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import { Link } from "react-router-dom";
@@ -201,36 +201,7 @@ export default function Home() {
               <p>Time Elapsed: {counter} seconds</p>
             </div>
           ) : (
-            // items.map((item, i) => (
-            //   <Col key={i} lg={3} md={4} xs={6} className="baca-item mb-2">
-            //     <Card border="0" className="h-100">
-            //       <div className="item-img-container">
-            //         <Card.Img
-            //           loading="lazy"
-            //           className="w-100 h-100"
-            //           style={{ objectFit: "cover", objectPosition: "center" }}
-            //           variant="top"
-            //           src={item.image}
-            //           alt={item.name}
-            //         />
-            //       </div>
-            //       <Card.Body className="d-flex flex-column justify-content-between">
-            //         <Card.Title>{capitalizeString(item.name)}</Card.Title>
-            //         <Card.Text>{item.description}</Card.Text>
-            //         <div className="d-flex justify-content-between">
-            //           <Button
-            //             className="bg-transparent border-0 p-0"
-            //             onClick={() => addItem(item)}
-            //             aria-label="Add item to cart"
-            //           >
-            //             <FontAwesomeIcon
-            //               icon={faCartShopping}
-            //               className="text-baca fs-4"
-            //             />
-            //           </Button>
-            //           <span className="text-baca fw-bold">
-            //             {numberWithDots(item.price)}đ/{item.unit}
-            //           </span>
+            
             items.map((item, i) => (
               <Col key={i} lg={3} md={4} xs={6} className="baca-item mb-2">
                 <Card border="0" className="h-100">
@@ -357,6 +328,13 @@ export default function Home() {
                 className="w-25 mx-2 rounded-1"
                 type="number"
                 value={selectedItem?.quantity}
+                onChange={(e) => {
+                  const updatedItem = {
+                    ...selectedItem,
+                    quantity: e.target.value,
+                  };
+                  setSelectedItem(updatedItem);
+                }}
               />
               <FontAwesomeIcon
                 icon={faMinus}
