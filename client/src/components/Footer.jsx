@@ -27,7 +27,9 @@ export default function Footer() {
           </div>
           <div>
             <FaPhoneAlt style={{ color: "rgb(127, 123, 117)" }} />
-            <span className="ms-2 text-secondary">0334408599</span>
+            <span className="ms-2 text-secondary">
+              0334408599&nbsp;0963892568
+            </span>
           </div>
         </div>
         <div className="d-flex flex-column justify-content-around my-3 ">

@@ -32,7 +32,25 @@ export default function Home() {
   const [cart, setCart] = useState(
     JSON.parse(localStorage.getItem("cart")) || []
   );
-  const [categories, setCategories] = useState([]);
+  // const [categories, setCategories] = useState([]);
+  const categories = [
+    {
+      _id: "6655a6eabafcd66341f61682",
+      name: "Bánh Cá",
+    },
+    {
+      _id: "6655a6eabafcd66341f61683",
+      name: "Mochi",
+    },
+    {
+      _id: "6655a6eabafcd66341f61684",
+      name: "Bánh Mực",
+    },
+    {
+      _id: "6655a6eabafcd66341f61685",
+      name: "Sữa Chua",
+    },
+  ];
   const [selectedItem, setSelectedItem] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [show, setShow] = useState(false);
@@ -46,15 +64,15 @@ export default function Home() {
     (async () => {
       try {
         setLoading(true);
-        const resCategories = await axios.get(
-          process.env.REACT_APP_BACKEND_URL + "/api/category"
-        );
+        // const resCategories = await axios.get(
+        //   process.env.REACT_APP_BACKEND_URL + "/api/category"
+        // );
         const resItems = await axios.post(
           process.env.REACT_APP_BACKEND_URL + "/api/items"
         );
 
         setItems(resItems.data.data);
-        setCategories(resCategories.data.data);
+        // setCategories(resCategories.data.data);
         setLoading(false);
         clearInterval(counterInterval);
       } catch (error) {
