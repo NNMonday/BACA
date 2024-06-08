@@ -7,7 +7,8 @@ import defaultAvatar from "../assets/default-avatar.png";
 import dropzone from "../assets/dropzone.png";
 import toast from "react-hot-toast";
 import { useDropzone } from "react-dropzone";
-
+import logo from "../assets/logo.png";
+import { FaStar } from "react-icons/fa";
 export default function Feedbacks() {
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
@@ -167,62 +168,79 @@ export default function Feedbacks() {
               Để lại đánh giá
             </Button>
           </div>
-          {feedbackList.map((f) => (
-            <Row
-              key={f._id}
-              className="pb-3 mt-3"
-              style={{ borderBottom: "1px solid black" }}
-            >
-              <Col>
-                <div className="d-flex">
-                  <div
-                    className="w-100 rounded-circle overflow-hidden border border-dark"
-                    style={{
-                      maxWidth: "60px",
-                      maxHeight: "60px",
-                      aspectRatio: "1/1",
-                    }}
-                  >
-                    <img className="w-100" src={defaultAvatar} alt="avatar" />
-                  </div>
-                  <div className="ms-3 flex-grow-1">
-                    <div>
-                      <strong>{f.name}</strong>
-                    </div>
-                    <div>{renderRating(f.rating)}</div>
-                    <div>{f.content}</div>
-                    <div className="mt-3 d-flex flex-wrap align-items-start">
-                      {f.images.map((image, i) => (
+          <div className="min-vh-100">
+            {feedbackList.length > 0 ? (
+              feedbackList.map((f) => (
+                <Row
+                  key={f._id}
+                  className="pb-3 mt-3"
+                  style={{ borderBottom: "1px solid black" }}
+                >
+                  <Col>
+                    <div className="d-flex">
+                      <div
+                        className="w-100 rounded-circle overflow-hidden border border-dark"
+                        style={{
+                          maxWidth: "60px",
+                          maxHeight: "60px",
+                          aspectRatio: "1/1",
+                        }}
+                      >
                         <img
-                          key={i}
-                          src={image}
-                          style={{ maxWidth: "100px" }}
-                          alt="feedback"
+                          className="w-100"
+                          src={defaultAvatar}
+                          alt="avatar"
                         />
-                      ))}
+                      </div>
+                      <div className="ms-3 flex-grow-1">
+                        <div>
+                          <strong>{f.name}</strong>
+                        </div>
+                        <div>{renderRating(f.rating)}</div>
+                        <div>{f.content}</div>
+                        <div className="mt-3 d-flex flex-wrap align-items-start">
+                          {f.images.map((image, i) => (
+                            <img
+                              key={i}
+                              src={image}
+                              style={{ maxWidth: "100px" }}
+                              alt="feedback"
+                            />
+                          ))}
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                </div>
-              </Col>
-            </Row>
-          ))}
-          <div className="d-flex justify-content-between align-items-center mt-3">
-            <Button
-              variant="secondary"
-              disabled={parseInt(page) === 1}
-              onClick={handlePreviousPage}
-            >
-              Previous
-            </Button>
-            <div>{renderPageNumbers()}</div>
-            <Button
-              variant="secondary"
-              disabled={parseInt(page) === totalPages}
-              onClick={handleNextPage}
-            >
-              Next
-            </Button>
+                  </Col>
+                </Row>
+              ))
+            ) : (
+              <div className="d-flex justify-content-center align-items-center flex-column">
+                <img src={logo} className="w-25" />
+                <p className="fs-5">Để lại đánh giá đầu tiên về chúng mình</p>
+              </div>
+            )}
           </div>
+          {feedbackList.length > 0 ? (
+            <div className="d-flex justify-content-between align-items-center mt-3">
+              <Button
+                variant="secondary"
+                disabled={parseInt(page) === 1}
+                onClick={handlePreviousPage}
+              >
+                Previous
+              </Button>
+              <div>{renderPageNumbers()}</div>
+              <Button
+                variant="secondary"
+                disabled={parseInt(page) === totalPages}
+                onClick={handleNextPage}
+              >
+                Next
+              </Button>
+            </div>
+          ) : (
+            <></>
+          )}
         </Container>
       </MainLayout>
       <Modal show={show} onHide={handleClose} centered>
@@ -270,9 +288,9 @@ export default function Feedbacks() {
               </Form.Label>
               <div className="d-flex mb-3">
                 {[1, 2, 3, 4, 5].map((rating) => (
-                  <i
+                  <FaStar
                     key={rating}
-                    className={`fa-solid fa-star ${
+                    className={` ${
                       rating <= feedback.rating ? "text-warning" : ""
                     }`}
                     style={{ cursor: "pointer" }}
@@ -282,7 +300,7 @@ export default function Feedbacks() {
                         rating: rating,
                       }))
                     }
-                  ></i>
+                  />
                 ))}
               </div>
             </Form.Group>

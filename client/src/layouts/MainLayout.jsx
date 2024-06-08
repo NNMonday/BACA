@@ -12,7 +12,7 @@ export default function MainLayout({ children }) {
   return (
     <Container fluid className="p-0">
       <MyNav />
-      <div style={{ marginTop: navbarHeight + "px" }}>{children}</div>
+      <div style={{ marginTop: navbarHeight + "px", minHeight: "100vh" }}>{children}</div>
       <Footer />
     </Container>
   );

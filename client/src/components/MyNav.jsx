@@ -38,12 +38,12 @@ export default function MyNav() {
           <NavLink to={"/"} className="nav-link px-md-4">
             Trang chủ
           </NavLink>
-          <NavLink to={"/about"} className="nav-link px-md-4">
+          {/* <NavLink to={"/about"} className="nav-link px-md-4">
             Về chúng tôi
           </NavLink>
           <NavLink to={"/events"} className="nav-link px-md-4">
             Sự kiện
-          </NavLink>
+          </NavLink> */}
           <NavLink to={"/feedbacks/1"} className="nav-link px-md-4">
             Feedback
           </NavLink>
