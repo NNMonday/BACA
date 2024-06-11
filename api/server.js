@@ -7,7 +7,7 @@ const app = express();
 app.use(express.json());
 
 app.get("/", (req, res) => {
-  res.status(200).json("Maneki-chan Server");
+  res.send("Maneki-chan Server");
 });
 
 app.use(
