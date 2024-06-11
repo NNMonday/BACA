@@ -5,9 +5,15 @@ require("dotenv/config");
 
 const app = express();
 app.use(express.json());
+
+app.get("/", (req, res) => {
+  res.status(200).json("Maneki-chan Server");
+});
+
 app.use(
   cors({
-    origin: ["http://maneki-chan.nnmonday.click", "http://localhost:3000"],
+    origin: ["http://localhost:3000", "https://maneki-chan.nnmonday.click"],
+    methods: ["GET", "POST"],
   })
 );
 

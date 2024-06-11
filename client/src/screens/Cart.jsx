@@ -32,7 +32,11 @@ export default function Cart() {
   useEffect(() => {
     (async () => {
       try {
-        await axios.post(process.env.REACT_APP_BOT_URL + "/send-notification");
+        const res = await axios.post(
+          // "http://localhost:3001/send-notification"
+          process.env.REACT_APP_BOT_URL + "/send-notification"
+        );
+        console.log(res);
       } catch (error) {
         console.log(error);
       }
