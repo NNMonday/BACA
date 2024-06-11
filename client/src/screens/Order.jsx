@@ -32,7 +32,7 @@ export default function Order() {
   };
   const deleteOrder = async (orderId) => {
     const result = await axios.delete(
-      process.env.REACT_APP_BACKEND_URL  + `/api/order/delete/${orderId}`
+      process.env.REACT_APP_BACKEND_URL + `/api/order/delete/${orderId}`
     );
     if (result.status === 200) {
       toast.success(result.data.message);
@@ -63,6 +63,7 @@ export default function Order() {
               <th>Địa chỉ</th>
               <th>Đơn hàng</th>
               <th>Tổng giá</th>
+              <th>Note</th>
               <th>Đã gọi</th>
               <th>Đã ship</th>
               <th>Hành động</th>
@@ -83,15 +84,8 @@ export default function Order() {
                     </span>
                   ))}
                 </td>
-                <td>
-                  {" "}
-                  {formatCurrency(
-                    o.items.reduce(
-                      (total, item) => total + item.amount * item.item.price,
-                      0
-                    )
-                  )}
-                </td>
+                <td> {formatCurrency(o.total)}</td>
+                <td>{o.note}</td>
                 <td>{<input type="checkbox" checked={o.confirmed}></input>}</td>
                 <td>{<input type="checkbox" checked={o.shipped}></input>}</td>
                 <td>
