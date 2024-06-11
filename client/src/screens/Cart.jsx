@@ -61,7 +61,7 @@ export default function Cart() {
   useEffect(() => {
     let sum = calculateCartSum(cart);
     if (sum >= 90000) {
-      sum -= 20000;
+      sum *= 0.9;
     }
     setOrderPrice(sum);
   }, [cart]);
@@ -163,7 +163,7 @@ export default function Cart() {
           <span>Giỏ Hàng</span>
         </h2>
         <h4 className="text-center fs-6" style={{ color: "red" }}>
-          Giảm 20k với đơn hàng trên 90k
+          Giảm 10% với đơn hàng trên 90k
         </h4>
         <div className="d-flex justify-content-center mt-3">
           <Table
