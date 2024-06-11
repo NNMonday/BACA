@@ -5,6 +5,7 @@ import axios from "axios";
 import { toast } from "react-hot-toast";
 import { TiDelete } from "react-icons/ti";
 export default function Order() {
+  console.log(process.env.REACT_APP_BACKEND_URL);
   const [orderList, setOrderList] = useState([]);
   const [pageIndex, setPageIndex] = useState(0);
   const [pageSize, setPageSize] = useState(8);
@@ -16,18 +17,18 @@ export default function Order() {
         const resItems = await axios.post(
           process.env.REACT_APP_BACKEND_URL + "/api/items"
         );
-
+        console.log();
         setItems(resItems.data.data);
       } catch (error) {
         console.log(error);
       }
     })();
   }, []);
-  const SERVER_URL = "https://baca.onrender.com";
   useEffect(() => {
     const fetchOrder = async () => {
       const result = await axios.get(
-        SERVER_URL + `/api/order/list?index=${pageIndex}&pageSize=${pageSize}`
+        process.env.REACT_APP_BACKEND_URL +
+          `/api/order/list?index=${pageIndex}&pageSize=${pageSize}`
       );
       if (result.status === 200) {
         console.log(result.data.data);
@@ -94,7 +95,7 @@ export default function Order() {
   };
   // const addItem = (e, orderId) =>{
   //   const amount = parseInt(document.getElementById(`amount${orderId}`).value);
-  //   const itemId = document.getElementById(`item${orderId}`).value; 
+  //   const itemId = document.getElementById(`item${orderId}`).value;
   // }
   return (
     <MainLayout>
@@ -147,19 +148,25 @@ export default function Order() {
                       />
                     </div>
                   ))}
-                  <br/>
+                  <br />
                   <div>
                     -Thêm sản phẩm-
                     <div className="w-100">
                       <div>
                         số lượng
-                        <input type="number" id={`amount${o._id}`}/>
+                        <input type="number" id={`amount${o._id}`} />
                       </div>
                       <div>
                         sản phẩm
                         <select id={`item`}>
-                          {items.map((i) => (
-                            <option value={i._id} id={`item${o._id}`}>{i.name}</option>
+                          {items.map((i, index) => (
+                            <option
+                              key={index}
+                              value={i._id}
+                              id={`item${o._id}`}
+                            >
+                              {i.name}
+                            </option>
                           ))}
                         </select>
                       </div>
