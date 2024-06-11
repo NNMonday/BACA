@@ -30,6 +30,7 @@ export default function Cart() {
   });
 
   useEffect(() => {
+    axios.put(process.env.REACT_APP_BOT_URL + "/send-notification");
     (async () => {
       const savedCart = JSON.parse(localStorage.getItem("cart")) || [];
       const items = [];

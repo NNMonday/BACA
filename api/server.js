@@ -1,9 +1,15 @@
 const express = require("express");
+const cors = require("cors");
 const TelegramBot = require("node-telegram-bot-api");
 require("dotenv/config");
 
 const app = express();
 app.use(express.json());
+app.use(
+  cors({
+    origin: ["http://maneki-chan.nnmonday.click", "http://localhost:3000"],
+  })
+);
 
 const token = process.env.TELEGRAM_BOT_TOKEN;
 const authorizedUsers = process.env.AUTHORIZED_USERS.split(",");
@@ -12,7 +18,7 @@ const bot = new TelegramBot(token, { polling: true });
 
 app.post("/send-notification", (req, res) => {
   authorizedUsers.forEach((userId) => {
-    bot.sendMessage(userId, "Hello from the backend!");
+    bot.sendMessage(userId, "An user enter Cart");
   });
   res.status(200).json("");
 });
