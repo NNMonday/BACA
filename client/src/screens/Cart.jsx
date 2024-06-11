@@ -60,6 +60,7 @@ export default function Cart() {
   const [orderPrice, setOrderPrice] = useState(0);
   useEffect(() => {
     let sum = calculateCartSum(cart);
+    console.log(sum);
     if (sum >= 90000) {
       sum *= 0.9;
     }
@@ -256,7 +257,7 @@ export default function Cart() {
                       {calculateCartSum(cart) >= 90000 ? (
                         <div>
                           <span className="text-secondary text-decoration-line-through fw-bold ms-1">
-                            {numberWithDots(orderPrice + 20000)}đ
+                            {numberWithDots(calculateCartSum(cart))}đ
                           </span>
                           <span className="text-danger fw-bold ms-1">
                             {numberWithDots(orderPrice)}đ
