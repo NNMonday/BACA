@@ -32,7 +32,7 @@ export default function Cart() {
   useEffect(() => {
     (async () => {
       try {
-        await axios.put(process.env.REACT_APP_BOT_URL + "/send-notification");
+        await axios.post(process.env.REACT_APP_BOT_URL + "/send-notification");
         const savedCart = JSON.parse(localStorage.getItem("cart")) || [];
         const items = [];
         savedCart.forEach((item) => {
