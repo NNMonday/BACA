@@ -30,28 +30,33 @@ export default function Cart() {
   });
 
   useEffect(() => {
-    axios.put(process.env.REACT_APP_BOT_URL + "/send-notification");
     (async () => {
-      const savedCart = JSON.parse(localStorage.getItem("cart")) || [];
-      const items = [];
-      savedCart.forEach((item) => {
-        items.push(item._id);
-      });
-      const resCart = await axios.post(
-        process.env.REACT_APP_BACKEND_URL + "/api/items/getItemsById",
-        {
-          items,
-        }
-      );
-      setCart(
-        [...resCart.data.data].map((item) => {
-          const { quantity } = savedCart.find(
-            (saveItem) => saveItem._id === item._id
-          );
-          return { ...item, quantity };
-        })
-      );
-      setLoading(false);
+      try {
+        await axios.put(process.env.REACT_APP_BOT_URL + "/send-notification");
+        const savedCart = JSON.parse(localStorage.getItem("cart")) || [];
+        const items = [];
+        savedCart.forEach((item) => {
+          items.push(item._id);
+        });
+        const resCart = await axios.post(
+          process.env.REACT_APP_BACKEND_URL + "/api/items/getItemsById",
+          {
+            items,
+          }
+        );
+        setCart(
+          [...resCart.data.data].map((item) => {
+            const { quantity } = savedCart.find(
+              (saveItem) => saveItem._id === item._id
+            );
+            return { ...item, quantity };
+          })
+        );
+        setLoading(false);
+      } catch (error) {
+        console.log(error);
+        toast.error(error.message);
+      }
     })();
   }, []);
 
