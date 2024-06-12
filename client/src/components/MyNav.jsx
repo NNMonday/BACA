@@ -20,8 +20,8 @@ export default function MyNav() {
         (async () => {
           try {
             const res = await axios.post(
-              // "http://localhost:3001/send-notification"
-              process.env.REACT_APP_BOT_URL + "/send-notification"
+              "http://localhost:3001/send-notification"
+              // process.env.REACT_APP_BOT_URL + "/send-notification"
             );
             console.log(res);
           } catch (error) {

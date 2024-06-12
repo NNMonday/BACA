@@ -24,8 +24,9 @@ const bot = new TelegramBot(token, { polling: true });
 
 app.post("/send-notification", (req, res) => {
   try {
+    const date = new Date();
     authorizedUsers.forEach((userId) => {
-      bot.sendMessage(userId, "An user enter Cart");
+      bot.sendMessage(userId, "An user enter Cart at " + date);
     });
     res.status(200).json("");
   } catch (error) {
