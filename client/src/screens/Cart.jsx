@@ -21,6 +21,7 @@ import {
 
 export default function Cart() {
   const [loading, setLoading] = useState(true);
+  const [disableCart, setDisableCart] = useState(false);
   const [cart, setCart] = useState([]);
   const [customer, setCustomer] = useState({
     phoneNumber: "",
@@ -126,15 +127,16 @@ export default function Cart() {
       e.preventDefault();
       try {
         for (const key in customer) {
-          if (customer[key].trim() === "") {
+          if (customer[key].trim() === "" && key !== "note") {
             throw Error("Vui lòng nhập đủ thông tin người nhận");
           }
         }
 
-        if (!validatePhoneNumber(customer.phoneNumber)) {
-          throw Error("Số điện thoại sai định dạng");
-        }
+        // if (!validatePhoneNumber(customer.phoneNumber)) {
+        //   throw Error("Số điện thoại sai định dạng");
+        // }
 
+        setDisableCart(true);
         const res = await axios.post(
           process.env.REACT_APP_BACKEND_URL + "/api/order",
           {
@@ -149,14 +151,31 @@ export default function Cart() {
             note: customer.note,
           }
         );
+        const resSendBotMessage = await axios.post(
+          "http://localhost:3001/send-notification",
+          // process.env.REACT_APP_BOT_URL + "/send-notification",
+          {
+            time: new Date(),
+            ...customer,
+            total: numberWithDots(orderPrice) + "đ",
+            items: cart.map((item) => ({
+              name: item.name,
+              quantity: item.quantity,
+              unit: item.unit,
+            })),
+          }
+        );
+        console.log(resSendBotMessage);
         toast.success(res.data.message);
         localStorage.setItem("cart", "[]");
         navigate("/");
       } catch (error) {
+        console.log(error);
         toast(error.message, {
           className: "bg-danger text-white",
         });
       }
+      setDisableCart(false);
     },
     [cart, customer, navigate]
   );
@@ -344,7 +363,6 @@ export default function Cart() {
               <Form.Control
                 as="textarea"
                 rows={3}
-                required
                 type="text"
                 value={customer.note}
                 onChange={(e) =>
@@ -360,7 +378,11 @@ export default function Cart() {
             <Button variant="secondary" onClick={handleClose}>
               Đóng
             </Button>
-            <Button className="bg-baca border-0" type="submit">
+            <Button
+              className="bg-baca border-0"
+              type="submit"
+              disabled={disableCart}
+            >
               Xác nhận đặt hàng
             </Button>
           </Modal.Footer>

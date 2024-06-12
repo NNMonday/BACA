@@ -6,7 +6,7 @@ import { Badge } from "react-bootstrap"; // Import Badge component
 import logo from "../assets/logo.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCartShopping } from "@fortawesome/free-solid-svg-icons";
-import axios from "axios";
+// import axios from "axios";
 
 export default function MyNav() {
   const cartItemCount = JSON.parse(localStorage.getItem("cart"))
@@ -16,19 +16,19 @@ export default function MyNav() {
     <Navbar
       expand="md"
       className="bg-white fixed-top shadow px-4 justify-content-between main-navbar"
-      onClick={() => {
-        (async () => {
-          try {
-            const res = await axios.post(
-              // "http://localhost:3001/send-notification"
-              process.env.REACT_APP_BOT_URL + "/send-notification"
-            );
-            console.log(res);
-          } catch (error) {
-            console.log(error);
-          }
-        })();
-      }}
+      // onClick={() => {
+      //   (async () => {
+      //     try {
+      //       const res = await axios.post(
+      //         // "http://localhost:3001/send-notification"
+      //         process.env.REACT_APP_BOT_URL + "/send-notification"
+      //       );
+      //       console.log(res);
+      //     } catch (error) {
+      //       console.log(error);
+      //     }
+      //   })();
+      // }}
     >
       <Navbar.Brand>
         <Link to={"/"} className="d-inline-block">

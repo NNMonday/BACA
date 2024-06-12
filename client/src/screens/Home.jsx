@@ -330,20 +330,25 @@ export default function Home() {
               style={{ justifyContent: "end", alignItems: "center" }}
             >
               <FontAwesomeIcon
-                className="fa fa-solid fa-plus rounded-1"
-                icon={faPlus}
+                icon={faMinus}
+                className="fa fa-solid fa-minus rounded-1 cursor-pointer"
                 style={{ backgroundColor: "#dcc295", padding: "4px" }}
-                onClick={(e) => {
-                  const updatedItem = {
-                    ...selectedItem,
-                    quantity: selectedItem.quantity + 1,
-                  };
-                  setSelectedItem(updatedItem);
+                onClick={() => {
+                  const newQuantity = selectedItem.quantity - 1;
+                  if (newQuantity > 0) {
+                    const updatedItem = {
+                      ...selectedItem,
+                      quantity: newQuantity,
+                    };
+                    setSelectedItem(updatedItem);
+                  } else {
+                    toast.error("Vui lòng nhập giá trị lớn hơn 0");
+                  }
                 }}
               />
               <input
                 className="w-25 mx-2 rounded-1"
-                type="number"
+                type="text"
                 value={selectedItem?.quantity}
                 onChange={(e) => {
                   const quantity = Number(e.target.value);
@@ -354,7 +359,7 @@ export default function Home() {
                   ) {
                     setSelectedItem((pre) => ({
                       ...pre,
-                      quantity: e.target.value,
+                      quantity: quantity,
                     }));
                   } else {
                     toast.error("Chỉ chấp nhận số lớn hơn 0");
@@ -362,15 +367,20 @@ export default function Home() {
                 }}
               />
               <FontAwesomeIcon
-                icon={faMinus}
-                className="fa fa-solid fa-minus rounded-1"
+                className="fa fa-solid fa-plus rounded-1 cursor-pointer"
+                icon={faPlus}
                 style={{ backgroundColor: "#dcc295", padding: "4px" }}
-                onClick={(e) => {
-                  const updatedItem = {
-                    ...selectedItem,
-                    quantity: selectedItem.quantity - 1,
-                  };
-                  setSelectedItem(updatedItem);
+                onClick={() => {
+                  const newQuantity = selectedItem.quantity + 1;
+                  if (newQuantity > 0) {
+                    const updatedItem = {
+                      ...selectedItem,
+                      quantity: newQuantity,
+                    };
+                    setSelectedItem(updatedItem);
+                  } else {
+                    toast.error("Vui lòng nhập giá trị lớn hơn 0");
+                  }
                 }}
               />
             </div>
