@@ -23,10 +23,15 @@ const authorizedUsers = process.env.AUTHORIZED_USERS.split(",");
 const bot = new TelegramBot(token, { polling: true });
 
 app.post("/send-notification", (req, res) => {
-  authorizedUsers.forEach((userId) => {
-    bot.sendMessage(userId, "An user enter Cart");
-  });
-  res.status(200).json("");
+  try {
+    authorizedUsers.forEach((userId) => {
+      bot.sendMessage(userId, "An user enter Cart");
+    });
+    res.status(200).json("");
+  } catch (error) {
+    console.log(error);
+    res.status(500).json(error);
+  }
 });
 
 const port = process.env.PORT || 3001;

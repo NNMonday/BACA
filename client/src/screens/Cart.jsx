@@ -32,20 +32,6 @@ export default function Cart() {
   useEffect(() => {
     (async () => {
       try {
-        const res = await axios.post(
-          // "http://localhost:3001/send-notification"
-          process.env.REACT_APP_BOT_URL + "/send-notification"
-        );
-        console.log(res);
-      } catch (error) {
-        console.log(error);
-      }
-    })();
-  }, []);
-
-  useEffect(() => {
-    (async () => {
-      try {
         const savedCart = JSON.parse(localStorage.getItem("cart")) || [];
         const items = [];
         savedCart.forEach((item) => {
