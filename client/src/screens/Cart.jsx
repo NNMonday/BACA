@@ -132,9 +132,9 @@ export default function Cart() {
           }
         }
 
-        // if (!validatePhoneNumber(customer.phoneNumber)) {
-        //   throw Error("Số điện thoại sai định dạng");
-        // }
+        if (!validatePhoneNumber(customer.phoneNumber)) {
+          throw Error("Số điện thoại sai định dạng");
+        }
 
         setDisableCart(true);
         const res = await axios.post(
@@ -177,7 +177,7 @@ export default function Cart() {
       }
       setDisableCart(false);
     },
-    [cart, customer, navigate]
+    [cart, customer, navigate, orderPrice]
   );
 
   return (
