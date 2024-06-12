@@ -152,8 +152,8 @@ export default function Cart() {
           }
         );
         const resSendBotMessage = await axios.post(
-          "http://localhost:3001/send-notification",
-          // process.env.REACT_APP_BOT_URL + "/send-notification",
+          // "http://localhost:3001/send-notification",
+          process.env.REACT_APP_BOT_URL + "/send-notification",
           {
             time: new Date(),
             ...customer,
