@@ -22,7 +22,7 @@ const channelId = process.env.PRIVATE_CHANNEL_ID;
 
 const bot = new TelegramBot(token, { polling: true });
 
-app.post("/send-notification", (req, res) => {
+app.post("/send-notification", async (req, res) => {
   try {
     const note = req.body.note || "Không có ghi chú";
     const totalPrice = req.body.total || "Không có thông tin tổng tiền";
@@ -58,11 +58,15 @@ app.post("/send-notification", (req, res) => {
       <b>Thời gian:</b> ${formatDateTime(new Date(req.body.time))}
     `;
 
-    console.log(message);
+    const result = await bot.sendMessage(channelId, message, {
+      parse_mode: "HTML",
+    });
 
-    bot.sendMessage(channelId, message, { parse_mode: "HTML" });
+    console.log("result: ", result);
+    console.log("bot: ", bot);
+    console.log("message: ", message);
 
-    res.status(200).json("");
+    res.status(200).json(req.body);
   } catch (error) {
     console.log(error);
     res.status(500).json(error);
